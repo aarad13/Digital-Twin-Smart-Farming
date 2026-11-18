@@ -1,0 +1,131 @@
+DIGITAL TWIN FOR SMART FARMING - PACKAGE VALIDATION REPORT
+Generated: 2026-11-19 (public prediction data and square-foot update)
+
+PACKAGE SCOPE
+- Frontend: HTML, CSS, JavaScript, Plotly.js
+- Backend: Python 3.12, Flask
+- Database: MySQL 8.4, PyMySQL
+- Data/ML: Pandas, NumPy, scikit-learn
+- Indian virtual farm: site boundary, plot geometry, crops/seasons, soil profile,
+  irrigation/water sources, infrastructure assets, field and lab provenance
+- Regional intelligence, location-specific farm outlook, seven-day weather,
+  NASA POWER root-zone model, SoilGrids context, district crop CSV import/trends,
+  virtual farm mapping and experimental forecast/research dashboards
+- Assisted village workflows, role-based local sessions, farmer self-registration,
+  one-time field activation, organisation-scoped company workspace, lab routing,
+  verified soil-result workflow and farmer card
+- macOS / Apple-silicon Docker deployment instructions
+
+CHECKS RUN IN THIS BUILD ENVIRONMENT
+- Python compileall passed.
+- Unit tests: 68 passed (including area conversions, India crop-model feature preparation, daily climate feature construction, classifier score interpretation and prediction-pipeline fit/predict).
+- Project core checker: all required-file, Python AST, dataset, model, HTML ID,
+  assisted-service, saved-farm outlook, regional dataset and JavaScript DOM reference checks passed.
+- Python files parsed by project checker: 35.
+- JavaScript syntax: all 6 application JavaScript files passed Node checks.
+- Bundled dataset: 21,312 rows x 22 columns; two experimental farm series,
+  each containing 10,656 exact 15-minute observations.
+- Dataset required columns/fields, missing values, duplicate keys and target
+  range checks passed.
+- Eight per-farm/per-horizon model bundles loaded; 1-hour and 6-hour smoke
+  forecasts passed for both experimental farm series.
+- Docker Compose YAML structure parsed; MySQL health dependency and persistent
+  named data volume confirmed.
+- Shell syntax checks passed for setup_mac_linux.sh, run_mac_linux.sh and
+  scripts/docker_entrypoint.sh.
+- ZIP integrity is checked at packaging. The bundled Kolkata dataset, experimental
+  models, demo data, downloader/trainer scripts and source-attribution guides are
+  included. The approximately 23 MB external India district dataset is downloaded
+  by the user on first setup; it is not falsely represented as bundled. Local .env,
+  uploads, .venv and caches are excluded from the archive.
+
+AUTHENTICATION / SERVICE WORKFLOW CHANGES
+- Farmer, government officer, company/FPO officer, lab staff and admin roles.
+- Passwords stored as one-way hashes; signed HTTP-only SameSite=Lax session.
+- API endpoints protected by authentication except sign-in/registration/
+  activation/sign-out and Docker's /health endpoint.
+- Field registration can issue a one-time activation code (7-day expiry) for a
+  farmer mobile number. It is shown to the officer for direct handover; no SMS
+  or OTP provider is connected.
+- Company service views are scoped by provisioned organisation name. Existing farmer self-registration accounts are reused during field registration rather than duplicated; a company cannot silently claim a farmer already registered by another company.
+- Lab sample queues, reports and lab result writes are scoped by assigned
+  destination laboratory organisation name.
+- Farmer-specific service and virtual farm records are scoped to their farmer ID. Sensitive virtual-farm editing, soil-report upload and sensor-farm settings are restricted to relevant roles.
+- MySQL connection status badge removed from the user-facing header.
+
+LIVE TEST LIMITATIONS
+This build environment does not have Docker Engine or a MySQL server, and it
+cannot execute the user's exact MacBook Air M2 deployment. The revised
+application has not been run end-to-end here against live MySQL, so the new
+account migration, farmer activation flow, organisation sample routing and
+uploaded file handling still need a live test on the user's Mac. The deployment
+entrypoint runs init_db.py, migrate_app_access.py, imports the bundled Kolkata
+experimental observations, then checks the database before starting Flask. The
+separate India district crop dataset is downloaded/trained once with the command
+in DATASET_SOURCES_AND_PREDICTIONS.md. After startup, seed the demo
+accounts and records with:
+
+  docker compose exec web python scripts/seed_demo_data.py
+
+Open http://127.0.0.1:5000. Demo credentials are in AUTH_AND_ACCESS_GUIDE.md.
+
+The project is not connected to live Soil Health Card, ICAR/KVK, government
+identity, fertiliser-company CRM or third-party laboratory APIs. External
+integration requires approval, credentials and end-to-end testing.
+
+DATA / AGRONOMIC LIMITATIONS
+- The EcoIrrigate sensor dataset contains only two experimental Kolkata farms;
+  it is not representative training data for every Indian district or farm.
+- Regional climate and soil data are grid/point estimates, not field-gate
+  sensor or accredited soil-lab measurements.
+- Soil values shown as verified must come from the lab workflow and an
+  explicitly verified record. Sample/demo figures are synthetic.
+- Crop-, soil-, growth-stage- and state-specific fertiliser/pesticide/water
+  recommendations require local KVK/agronomist review and field evidence.
+- Government accounts currently have broad pilot access. State/district
+  jurisdiction controls, HTTPS, CSRF protection, login throttling, OTP,
+  password reset, audit history, file scanning, encrypted backups and offline
+  synchronisation are production hardening requirements.
+
+This report records checks actually executed here. It does not claim live
+field accuracy, official partnerships, external integration or successful
+end-to-end operation on the user's specific MacBook.
+
+RESTORED CORE DIGITAL-TWIN FEATURES
+- Farmer, government/KVK, company/FPO and laboratory workflows are retained.
+- My Area and My Farm are first-class navigation entries for farmer and field-team roles.
+- Farm Predictions refreshes the saved farm list each time the view opens, selects the newest farm by default, and re-runs when a different farm is selected.
+- Farm Predictions reads a saved virtual farm's coordinates and district, then requests
+  regional climate, seven-day weather, mapped soil context, district crop history,
+  local problem screening and the location-specific root-zone forecast.
+- Regional data failures now degrade individual panels instead of blanking the full
+  regional analysis; unavailable predictions are explicitly labelled rather than fabricated.
+- Farmer prediction view explains the difference between 7-day weather forecasts, the optional NASA grid-point root-zone model, district crop-history trend baselines, and the separate Kolkata research models.
+- The Kolkata EcoIrrigate 1-hour/6-hour experimental forecast is lazy-loaded only when
+  Reports & Research is opened and remains clearly separate from an Indian farm forecast.
+- Synthetic Sehore/Pune crop-history data can be loaded for a presentation only; an
+  uploaded district crop CSV and its origin metadata persist in ./data/regional.
+- Crop-year ranges such as 2021-22 are parsed to the starting year for simple district
+  trend baselines. These are not field-level yield forecasts or crop recommendations.
+
+
+PUBLIC PREDICTION DATASET INTEGRATION (CURRENT BUILD)
+- Added a one-command downloader/trainer for the India District Crop Dataset
+  (1997–2015; 34,903 rows x 48 columns; 652 districts; 34 states/UT; six seasons;
+  CC BY 4.0 as stated by its repository). The dataset combines government crop
+  statistics labels, SoilGrids soil covariates, NASA POWER climate and district
+  geography. Source details and links are documented in
+  DATASET_SOURCES_AND_PREDICTIONS.md and the signed-off attribution text appears
+  in the app's data-source panel.
+- The crop classifier target is historical district dominant crop by season.
+  Its output is a ranked historical pattern with uncalibrated classifier vote
+  shares, not a probability of success, farm suitability, yield or profit.
+- A source-compatible training pipeline performs five-fold GroupKFold validation
+  grouped by district_key and writes a local manifest with metrics and provenance.
+- NASA POWER, Open-Meteo and SoilGrids WCS inputs are queried/cached by farm
+  coordinate when a farm outlook is generated. IMD gridded rainfall and the
+  Cornell/ICRISAT district database are documented as reference/future sources;
+  they are not claimed as active inputs in the current prediction pipeline.
+- Individual farmer/farm/plot sizes are entered and displayed in square feet.
+  Internal MySQL values continue to use hectare equivalents for backward
+  compatibility; official district-level crop tables retain source-native hectares.

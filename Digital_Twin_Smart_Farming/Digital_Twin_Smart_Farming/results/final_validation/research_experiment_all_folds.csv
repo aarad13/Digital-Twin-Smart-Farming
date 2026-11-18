@@ -1,0 +1,81 @@
+split,farm,fold,horizon_h,features,model,train_n,test_n,MAE,RMSE,R2
+within-farm-expanding-purged,Kolkata_Farm_1,1,1,persistence,Persistence,5168,1551,0.04562862669245651,0.0657942595564896,0.9896975706560501
+within-farm-expanding-purged,Kolkata_Farm_1,1,1,autoregressive,Ridge,5168,1551,0.09409532485474027,0.11145905474776216,0.9704338791036144
+within-farm-expanding-purged,Kolkata_Farm_1,1,1,autoregressive,Random Forest,5168,1551,0.08186403755157214,0.12841748391078878,0.9607525043300101
+within-farm-expanding-purged,Kolkata_Farm_1,1,1,environment_augmented,Ridge,5168,1551,0.14932583038081246,0.1709938947542526,0.9304135235958094
+within-farm-expanding-purged,Kolkata_Farm_1,1,1,environment_augmented,Random Forest,5168,1551,0.06998677767783819,0.108241733120441,0.9721161259774084
+within-farm-expanding-purged,Kolkata_Farm_1,2,1,persistence,Persistence,6719,1552,0.07257731958762886,0.2579618768285485,0.9813581240106612
+within-farm-expanding-purged,Kolkata_Farm_1,2,1,autoregressive,Ridge,6719,1552,0.05636933082152188,0.25554875546927086,0.9817052660116028
+within-farm-expanding-purged,Kolkata_Farm_1,2,1,autoregressive,Random Forest,6719,1552,0.18866553676523332,0.4375544920436875,0.9463656709497372
+within-farm-expanding-purged,Kolkata_Farm_1,2,1,environment_augmented,Ridge,6719,1552,0.05677429633047781,0.2543955864948799,0.9818700041998308
+within-farm-expanding-purged,Kolkata_Farm_1,2,1,environment_augmented,Random Forest,6719,1552,0.1846754594555206,0.4439591343484463,0.9447840497839579
+within-farm-expanding-purged,Kolkata_Farm_1,3,1,persistence,Persistence,8271,2069,0.0733397776703722,0.20646627536061585,0.9927949251894931
+within-farm-expanding-purged,Kolkata_Farm_1,3,1,autoregressive,Ridge,8271,2069,0.06233652698208622,0.200224063913387,0.9932240094457461
+within-farm-expanding-purged,Kolkata_Farm_1,3,1,autoregressive,Random Forest,8271,2069,0.26602364469180423,0.5468097415242762,0.9494626187253045
+within-farm-expanding-purged,Kolkata_Farm_1,3,1,environment_augmented,Ridge,8271,2069,0.06487707825816275,0.2027411055060059,0.9930525749756628
+within-farm-expanding-purged,Kolkata_Farm_1,3,1,environment_augmented,Random Forest,8271,2069,0.26902784468943824,0.5430218205096528,0.9501603698476613
+within-farm-expanding-purged,Kolkata_Farm_1,1,6,persistence,Persistence,5148,1551,0.18819471308833013,0.22266902750305304,0.8785210797869146
+within-farm-expanding-purged,Kolkata_Farm_1,1,6,autoregressive,Ridge,5148,1551,0.5346777805414491,0.5811593878867292,0.17249273830024647
+within-farm-expanding-purged,Kolkata_Farm_1,1,6,autoregressive,Random Forest,5148,1551,0.7232121125818943,0.8429767653873622,-0.7410550663288968
+within-farm-expanding-purged,Kolkata_Farm_1,1,6,environment_augmented,Ridge,5148,1551,0.7569004147289554,0.8422597908279864,-0.7380946968688751
+within-farm-expanding-purged,Kolkata_Farm_1,1,6,environment_augmented,Random Forest,5148,1551,0.7735894199230084,0.9198001328014378,-1.0728517097982286
+within-farm-expanding-purged,Kolkata_Farm_1,2,6,persistence,Persistence,6699,1552,0.33543170103092784,0.6524783738565711,0.879050017064541
+within-farm-expanding-purged,Kolkata_Farm_1,2,6,autoregressive,Ridge,6699,1552,0.2142619638860349,0.6215467917408712,0.8902457803845593
+within-farm-expanding-purged,Kolkata_Farm_1,2,6,autoregressive,Random Forest,6699,1552,0.4589623598325524,0.8843506923118989,0.7778109724194717
+within-farm-expanding-purged,Kolkata_Farm_1,2,6,environment_augmented,Ridge,6699,1552,0.21112896680639562,0.6071562102918775,0.8952691927375963
+within-farm-expanding-purged,Kolkata_Farm_1,2,6,environment_augmented,Random Forest,6699,1552,0.44291007365582097,0.8598380540032673,0.7899576388501093
+within-farm-expanding-purged,Kolkata_Farm_1,3,6,persistence,Persistence,8251,2069,0.3633494441759304,0.6141835322685,0.9358479559260129
+within-farm-expanding-purged,Kolkata_Farm_1,3,6,autoregressive,Ridge,8251,2069,0.3114156411135305,0.5681450545825086,0.9451050208212453
+within-farm-expanding-purged,Kolkata_Farm_1,3,6,autoregressive,Random Forest,8251,2069,0.48366008950365386,0.7773656267655566,0.8972303612809966
+within-farm-expanding-purged,Kolkata_Farm_1,3,6,environment_augmented,Ridge,8251,2069,0.3172284475964845,0.5904661991089433,0.9407068877510798
+within-farm-expanding-purged,Kolkata_Farm_1,3,6,environment_augmented,Random Forest,8251,2069,0.5224460942839922,0.8400172976648019,0.8799974094154639
+within-farm-expanding-purged,Kolkata_Farm_2,1,1,persistence,Persistence,5168,1551,0.0536041263700838,0.12182842995086987,0.9915819070795604
+within-farm-expanding-purged,Kolkata_Farm_2,1,1,autoregressive,Ridge,5168,1551,0.12503305036443504,0.1661700151369323,0.9843389188667571
+within-farm-expanding-purged,Kolkata_Farm_2,1,1,autoregressive,Random Forest,5168,1551,0.1562035233245184,0.3522565713977053,0.9296223715722297
+within-farm-expanding-purged,Kolkata_Farm_2,1,1,environment_augmented,Ridge,5168,1551,0.11536498118681111,0.1584976357606951,0.9857517345544065
+within-farm-expanding-purged,Kolkata_Farm_2,1,1,environment_augmented,Random Forest,5168,1551,0.09004670712803069,0.19942431760096826,0.9774434513316669
+within-farm-expanding-purged,Kolkata_Farm_2,2,1,persistence,Persistence,6719,1552,0.05242268041237115,0.1142422367594132,0.9904516178121265
+within-farm-expanding-purged,Kolkata_Farm_2,2,1,autoregressive,Ridge,6719,1552,0.04568627425453178,0.11040771310664538,0.9910818406627121
+within-farm-expanding-purged,Kolkata_Farm_2,2,1,autoregressive,Random Forest,6719,1552,0.08008931933651318,0.17088183271891091,0.9786367075791025
+within-farm-expanding-purged,Kolkata_Farm_2,2,1,environment_augmented,Ridge,6719,1552,0.04877408877073319,0.11146826144804757,0.9909096866516851
+within-farm-expanding-purged,Kolkata_Farm_2,2,1,environment_augmented,Random Forest,6719,1552,0.07273120348244776,0.15525569168915251,0.9823651626034523
+within-farm-expanding-purged,Kolkata_Farm_2,3,1,persistence,Persistence,8271,2069,0.10578057032382791,0.343002267957618,0.9802612040825651
+within-farm-expanding-purged,Kolkata_Farm_2,3,1,autoregressive,Ridge,8271,2069,0.09152927211212368,0.3412960836120809,0.9804570877020894
+within-farm-expanding-purged,Kolkata_Farm_2,3,1,autoregressive,Random Forest,8271,2069,0.32576045378341945,0.6530004108430634,0.9284592345486589
+within-farm-expanding-purged,Kolkata_Farm_2,3,1,environment_augmented,Ridge,8271,2069,0.08896995142734679,0.3402441197348308,0.9805773747814651
+within-farm-expanding-purged,Kolkata_Farm_2,3,1,environment_augmented,Random Forest,8271,2069,0.33131585689096854,0.6571967353099147,0.927536806747222
+within-farm-expanding-purged,Kolkata_Farm_2,1,6,persistence,Persistence,5148,1551,0.2486137975499678,0.3630226284347045,0.9135988573883863
+within-farm-expanding-purged,Kolkata_Farm_2,1,6,autoregressive,Ridge,5148,1551,0.7221331111672302,0.803582747088182,0.5766366103042367
+within-farm-expanding-purged,Kolkata_Farm_2,1,6,autoregressive,Random Forest,5148,1551,0.7217228973471655,1.126164883411891,0.1685118702055568
+within-farm-expanding-purged,Kolkata_Farm_2,1,6,environment_augmented,Ridge,5148,1551,0.686460706687989,0.7728662211247487,0.6083837135267752
+within-farm-expanding-purged,Kolkata_Farm_2,1,6,environment_augmented,Random Forest,5148,1551,0.5933966820151942,0.9067600671075444,0.460940301750821
+within-farm-expanding-purged,Kolkata_Farm_2,2,6,persistence,Persistence,6699,1552,0.23736469072164948,0.3474872058758749,0.9101109951581625
+within-farm-expanding-purged,Kolkata_Farm_2,2,6,autoregressive,Ridge,6699,1552,0.1826741843741323,0.32155598643360883,0.9230263407287879
+within-farm-expanding-purged,Kolkata_Farm_2,2,6,autoregressive,Random Forest,6699,1552,0.2897559409989939,0.4410611122290592,0.8551806909388697
+within-farm-expanding-purged,Kolkata_Farm_2,2,6,environment_augmented,Ridge,6699,1552,0.2349819363149157,0.36268519724749493,0.9020761239464576
+within-farm-expanding-purged,Kolkata_Farm_2,2,6,environment_augmented,Random Forest,6699,1552,0.4448024141713854,0.7495856819339428,0.5817157623244245
+within-farm-expanding-purged,Kolkata_Farm_2,3,6,persistence,Persistence,8251,2069,0.5128032866118897,0.8672285763145764,0.8708740646011608
+within-farm-expanding-purged,Kolkata_Farm_2,3,6,autoregressive,Ridge,8251,2069,0.4694500389163321,0.8646141186938547,0.8716514499818926
+within-farm-expanding-purged,Kolkata_Farm_2,3,6,autoregressive,Random Forest,8251,2069,1.2549599139050907,1.7133927947599394,0.49596558218170417
+within-farm-expanding-purged,Kolkata_Farm_2,3,6,environment_augmented,Ridge,8251,2069,0.4434899181761171,0.8495145570174232,0.8760952456502852
+within-farm-expanding-purged,Kolkata_Farm_2,3,6,environment_augmented,Random Forest,8251,2069,1.2107318092793875,1.6745903885737903,0.5185363443298678
+directional-held-out-farm,Kolkata_Farm_1->Kolkata_Farm_2,1,1,persistence,Persistence,10344,10344,0.06902455529775715,0.23464823271608648,0.9877686192471609
+directional-held-out-farm,Kolkata_Farm_1->Kolkata_Farm_2,1,1,autoregressive,Ridge,10344,10344,0.056763093411338034,0.23057968456271488,0.9881891000170403
+directional-held-out-farm,Kolkata_Farm_1->Kolkata_Farm_2,1,1,autoregressive,Random Forest,10344,10344,0.09679393596537963,0.2646572214776808,0.9844400424506836
+directional-held-out-farm,Kolkata_Farm_1->Kolkata_Farm_2,1,1,environment_augmented,Ridge,10344,10344,0.058025344153197614,0.23089201789480174,0.9881570812709666
+directional-held-out-farm,Kolkata_Farm_1->Kolkata_Farm_2,1,1,environment_augmented,Random Forest,10344,10344,0.10776995179407564,0.28756976077262225,0.981629230729038
+directional-held-out-farm,Kolkata_Farm_1->Kolkata_Farm_2,1,6,persistence,Persistence,10344,10344,0.323739365815932,0.6108573590212194,0.9176955175593016
+directional-held-out-farm,Kolkata_Farm_1->Kolkata_Farm_2,1,6,autoregressive,Ridge,10344,10344,0.23670238041483982,0.5619071742655237,0.9303577134137279
+directional-held-out-farm,Kolkata_Farm_1->Kolkata_Farm_2,1,6,autoregressive,Random Forest,10344,10344,0.3726655111483432,0.7209131133275231,0.885366984076192
+directional-held-out-farm,Kolkata_Farm_1->Kolkata_Farm_2,1,6,environment_augmented,Ridge,10344,10344,0.2397595057815859,0.5645932110397615,0.9296903119317035
+directional-held-out-farm,Kolkata_Farm_1->Kolkata_Farm_2,1,6,environment_augmented,Random Forest,10344,10344,0.38380195055367283,0.722107517447816,0.8849868229539942
+directional-held-out-farm,Kolkata_Farm_2->Kolkata_Farm_1,1,1,persistence,Persistence,10344,10344,0.06589133797370457,0.21404091917483092,0.9879527970229057
+directional-held-out-farm,Kolkata_Farm_2->Kolkata_Farm_1,1,1,autoregressive,Ridge,10344,10344,0.05618762604788023,0.2104750940304741,0.9883508553678536
+directional-held-out-farm,Kolkata_Farm_2->Kolkata_Farm_1,1,1,autoregressive,Random Forest,10344,10344,0.08398521106157689,0.23218904519312986,0.985823270129583
+directional-held-out-farm,Kolkata_Farm_2->Kolkata_Farm_1,1,1,environment_augmented,Ridge,10344,10344,0.057121597845042615,0.2105756637436146,0.9883397202638541
+directional-held-out-farm,Kolkata_Farm_2->Kolkata_Farm_1,1,1,environment_augmented,Random Forest,10344,10344,0.08698429693881538,0.23943233648056383,0.9849249687848264
+directional-held-out-farm,Kolkata_Farm_2->Kolkata_Farm_1,1,6,persistence,Persistence,10344,10344,0.30482501933488015,0.5572629065552708,0.9186835032254965
+directional-held-out-farm,Kolkata_Farm_2->Kolkata_Farm_1,1,6,autoregressive,Ridge,10344,10344,0.2371008900464275,0.5162726092206653,0.930206246186776
+directional-held-out-farm,Kolkata_Farm_2->Kolkata_Farm_1,1,6,autoregressive,Random Forest,10344,10344,0.4282795378812262,0.8094031848234499,0.8284509937573764
+directional-held-out-farm,Kolkata_Farm_2->Kolkata_Farm_1,1,6,environment_augmented,Ridge,10344,10344,0.24398380519056423,0.5195741954790085,0.929310723551119
+directional-held-out-farm,Kolkata_Farm_2->Kolkata_Farm_1,1,6,environment_augmented,Random Forest,10344,10344,0.44386582744684017,0.8471683039215856,0.8120692763500784

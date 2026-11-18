@@ -1,0 +1,67 @@
+DIGITAL TWIN FOR SMART FARMING - QUICK START (MACBOOK AIR M2 / APPLE SILICON)
+
+RECOMMENDED: DOCKER DESKTOP (NO HOST PYTHON INSTALL REQUIRED)
+1) Download Docker Desktop for Mac with Apple silicon from:
+   https://docs.docker.com/desktop/setup/install/mac-install/
+   Install it, open Docker Desktop and wait until the engine is running.
+2) Extract this project ZIP. Open Terminal (or VS Code Terminal) in the
+   Digital_Twin_Smart_Farming folder.
+3) Run:
+      docker compose up --build
+   Docker automatically uses the compatible ARM64 images on your M2 Mac.
+4) Open http://127.0.0.1:5000 in your browser. Keep the Terminal open.
+5) Stop with Ctrl+C. To stop containers later, run `docker compose down`.
+   Your MySQL data is retained. Do not use `docker compose down -v` unless you
+   intentionally want to permanently delete the local database volume.
+
+ALTERNATIVE: RUN FLASK LOCALLY, WITH MYSQL IN DOCKER
+1) Install native Apple-silicon Python 3.12 (not Intel/Rosetta Python).
+   Official macOS installers: https://www.python.org/downloads/macos/
+2) Install and start Docker Desktop for Apple silicon (link above).
+3) In Terminal, change directory into this extracted project folder and run:
+      PYTHON_BIN=python3.12 ./setup_mac_linux.sh
+      ./run_mac_linux.sh
+4) Open http://127.0.0.1:5000. Keep the Terminal open.
+
+VS CODE
+Open the extracted Digital_Twin_Smart_Farming folder in VS Code. Use
+Terminal > New Terminal, then follow either setup above.
+
+REGIONAL FARM INTELLIGENCE
+After the app starts, open “Regional farm intelligence”. Search an Indian
+village/town/district/region, select a matching result and run the analysis.
+Internet access is required. To show crops historically grown in that district,
+download the Government of India district-wise, season-wise crop production CSV
+and upload it in the same panel. See REGIONAL_INTELLIGENCE_GUIDE.md for sources,
+CSV columns and limitations.
+
+INDIAN VIRTUAL FARM STRUCTURE
+1) Search and analyze the farm's Indian region in Regional Farm Intelligence.
+2) Choose “Create virtual farm from this region”. Enter a farm name, area and
+   actual farm coordinates; verify the agro-climatic region.
+3) Create the farm and draw its outer perimeter.
+4) Map each plot and enter its crop, Indian season (Kharif/Rabi/Zaid/perennial),
+   crop stage, soil group, irrigation method and available Soil Health Card data.
+5) Place wells, ponds, tanks, pumps, channels and other infrastructure on the map.
+
+
+INDIAN CROP-PREDICTION DATA (ONE-TIME SETUP)
+After Docker is running, run this one command once from the project folder:
+   docker compose exec web python /app/scripts/prepare_india_crop_model.py
+It downloads and trains the India district crop-pattern model. Internet access
+inside Docker is required. The CSV, model and validation report are saved in
+data/regional/ and persist across web-container rebuilds. The ZIP includes the
+downloader/trainer; the 23 MB source CSV is fetched on first run, not embedded.
+See DATASETS_SIMPLE_GUIDE.md for all data sources and limitations.
+
+FARM SIZE
+Enter individual farm and field plot area in square feet (sq ft). One acre is
+43,560 sq ft. Official district-level statistical tables keep hectares because
+that is the unit used by the original government dataset.
+
+VALIDATION
+From the project folder, run `python scripts/check_project.py` inside the
+project virtual environment, then `python -m pytest -q`. Live MySQL and regional
+API checks require a running database and internet access. Full instructions,
+troubleshooting and model limitations are in README.md and
+MACBOOK_AIR_M2_SETUP.md.

@@ -1,0 +1,181 @@
+{
+  "dataset": "EcoIrrigate: Multi-Sensor Soil Moisture Monitoring Dataset",
+  "doi": "10.17632/8x4v7yy3ds.1",
+  "target": "Volumetric_Moisture_Pct",
+  "sampling_minutes": 15,
+  "horizons_hours": [
+    1,
+    6
+  ],
+  "scikit_learn": "1.8.0",
+  "models": [
+    {
+      "key": "Kolkata_Farm_1|1|autoregressive",
+      "rows": 10344,
+      "ridge_features": [
+        "moisture_now",
+        "lag_1h",
+        "lag_6h",
+        "lag_24h",
+        "lag_72h",
+        "mean_prev_1h",
+        "mean_prev_6h",
+        "std_prev_6h",
+        "Hour_sin",
+        "Hour_cos",
+        "Day_sin",
+        "Day_cos"
+      ],
+      "target": "target_1h"
+    },
+    {
+      "key": "Kolkata_Farm_1|1|environment_augmented",
+      "rows": 10344,
+      "ridge_features": [
+        "moisture_now",
+        "lag_1h",
+        "lag_6h",
+        "lag_24h",
+        "lag_72h",
+        "mean_prev_1h",
+        "mean_prev_6h",
+        "std_prev_6h",
+        "Hour_sin",
+        "Hour_cos",
+        "Day_sin",
+        "Day_cos",
+        "Atm_Temperature_C",
+        "Atm_Pressure_inHg",
+        "Soil_Temperature_C",
+        "Sensor_Board_Temperature_C"
+      ],
+      "target": "target_1h"
+    },
+    {
+      "key": "Kolkata_Farm_1|6|autoregressive",
+      "rows": 10344,
+      "ridge_features": [
+        "moisture_now",
+        "lag_1h",
+        "lag_6h",
+        "lag_24h",
+        "lag_72h",
+        "mean_prev_1h",
+        "mean_prev_6h",
+        "std_prev_6h",
+        "Hour_sin",
+        "Hour_cos",
+        "Day_sin",
+        "Day_cos"
+      ],
+      "target": "target_6h"
+    },
+    {
+      "key": "Kolkata_Farm_1|6|environment_augmented",
+      "rows": 10344,
+      "ridge_features": [
+        "moisture_now",
+        "lag_1h",
+        "lag_6h",
+        "lag_24h",
+        "lag_72h",
+        "mean_prev_1h",
+        "mean_prev_6h",
+        "std_prev_6h",
+        "Hour_sin",
+        "Hour_cos",
+        "Day_sin",
+        "Day_cos",
+        "Atm_Temperature_C",
+        "Atm_Pressure_inHg",
+        "Soil_Temperature_C",
+        "Sensor_Board_Temperature_C"
+      ],
+      "target": "target_6h"
+    },
+    {
+      "key": "Kolkata_Farm_2|1|autoregressive",
+      "rows": 10344,
+      "ridge_features": [
+        "moisture_now",
+        "lag_1h",
+        "lag_6h",
+        "lag_24h",
+        "lag_72h",
+        "mean_prev_1h",
+        "mean_prev_6h",
+        "std_prev_6h",
+        "Hour_sin",
+        "Hour_cos",
+        "Day_sin",
+        "Day_cos"
+      ],
+      "target": "target_1h"
+    },
+    {
+      "key": "Kolkata_Farm_2|1|environment_augmented",
+      "rows": 10344,
+      "ridge_features": [
+        "moisture_now",
+        "lag_1h",
+        "lag_6h",
+        "lag_24h",
+        "lag_72h",
+        "mean_prev_1h",
+        "mean_prev_6h",
+        "std_prev_6h",
+        "Hour_sin",
+        "Hour_cos",
+        "Day_sin",
+        "Day_cos",
+        "Atm_Temperature_C",
+        "Atm_Pressure_inHg",
+        "Soil_Temperature_C",
+        "Sensor_Board_Temperature_C"
+      ],
+      "target": "target_1h"
+    },
+    {
+      "key": "Kolkata_Farm_2|6|autoregressive",
+      "rows": 10344,
+      "ridge_features": [
+        "moisture_now",
+        "lag_1h",
+        "lag_6h",
+        "lag_24h",
+        "lag_72h",
+        "mean_prev_1h",
+        "mean_prev_6h",
+        "std_prev_6h",
+        "Hour_sin",
+        "Hour_cos",
+        "Day_sin",
+        "Day_cos"
+      ],
+      "target": "target_6h"
+    },
+    {
+      "key": "Kolkata_Farm_2|6|environment_augmented",
+      "rows": 10344,
+      "ridge_features": [
+        "moisture_now",
+        "lag_1h",
+        "lag_6h",
+        "lag_24h",
+        "lag_72h",
+        "mean_prev_1h",
+        "mean_prev_6h",
+        "std_prev_6h",
+        "Hour_sin",
+        "Hour_cos",
+        "Day_sin",
+        "Day_cos",
+        "Atm_Temperature_C",
+        "Atm_Pressure_inHg",
+        "Soil_Temperature_C",
+        "Sensor_Board_Temperature_C"
+      ],
+      "target": "target_6h"
+    }
+  ]
+}

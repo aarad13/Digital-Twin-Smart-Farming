@@ -1,0 +1,41 @@
+State_Name,District_Name,Crop_Year,Season,Crop,Area,Production
+Madhya Pradesh,Sehore,2020,Kharif,Soybean,128000,172000
+Madhya Pradesh,Sehore,2021,Kharif,Soybean,131000,184000
+Madhya Pradesh,Sehore,2022,Kharif,Soybean,126000,166000
+Madhya Pradesh,Sehore,2023,Kharif,Soybean,134000,198000
+Madhya Pradesh,Sehore,2024,Kharif,Soybean,137000,207000
+Madhya Pradesh,Sehore,2020,Kharif,Maize,19000,39000
+Madhya Pradesh,Sehore,2021,Kharif,Maize,20500,42500
+Madhya Pradesh,Sehore,2022,Kharif,Maize,19800,39700
+Madhya Pradesh,Sehore,2023,Kharif,Maize,21600,46500
+Madhya Pradesh,Sehore,2024,Kharif,Maize,22100,48100
+Madhya Pradesh,Sehore,2020,Rabi,Wheat,114000,289000
+Madhya Pradesh,Sehore,2021,Rabi,Wheat,117000,301000
+Madhya Pradesh,Sehore,2022,Rabi,Wheat,119000,309000
+Madhya Pradesh,Sehore,2023,Rabi,Wheat,121000,318000
+Madhya Pradesh,Sehore,2024,Rabi,Wheat,123000,327000
+Madhya Pradesh,Sehore,2020,Rabi,Chickpea,21000,26000
+Madhya Pradesh,Sehore,2021,Rabi,Chickpea,21800,28200
+Madhya Pradesh,Sehore,2022,Rabi,Chickpea,22400,29100
+Madhya Pradesh,Sehore,2023,Rabi,Chickpea,23100,31000
+Madhya Pradesh,Sehore,2024,Rabi,Chickpea,23800,32800
+Maharashtra,Pune,2020,Kharif,Bajra,18500,22100
+Maharashtra,Pune,2021,Kharif,Bajra,19200,23600
+Maharashtra,Pune,2022,Kharif,Bajra,17800,20400
+Maharashtra,Pune,2023,Kharif,Bajra,19600,24400
+Maharashtra,Pune,2024,Kharif,Bajra,20100,25100
+Maharashtra,Pune,2020,Rabi,Jowar,36500,39800
+Maharashtra,Pune,2021,Rabi,Jowar,35800,38700
+Maharashtra,Pune,2022,Rabi,Jowar,34200,35900
+Maharashtra,Pune,2023,Rabi,Jowar,35100,37100
+Maharashtra,Pune,2024,Rabi,Jowar,34700,36600
+Maharashtra,Pune,2020,Whole Year,Sugarcane,94000,8840000
+Maharashtra,Pune,2021,Whole Year,Sugarcane,95500,9170000
+Maharashtra,Pune,2022,Whole Year,Sugarcane,97200,9310000
+Maharashtra,Pune,2023,Whole Year,Sugarcane,98800,9540000
+Maharashtra,Pune,2024,Whole Year,Sugarcane,100200,9780000
+Maharashtra,Pune,2020,Rabi,Gram,12600,16900
+Maharashtra,Pune,2021,Rabi,Gram,13100,18100
+Maharashtra,Pune,2022,Rabi,Gram,13700,19000
+Maharashtra,Pune,2023,Rabi,Gram,14100,20300
+Maharashtra,Pune,2024,Rabi,Gram,14800,21800

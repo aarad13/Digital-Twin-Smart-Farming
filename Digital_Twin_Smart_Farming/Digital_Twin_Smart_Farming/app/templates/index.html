@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#174d35">
+  <title>Smart Farming | Village Agriculture Service Desk</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}?v=india-data-sqft-2">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css">
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brandmark" aria-hidden="true">🌱</div>
+    <div class="brandtext"><strong>Smart Farming Service Desk</strong><span data-i18n="brand_subtitle">Village agriculture support, made simple</span></div>
+    <div class="topbar-tools">
+      <label for="language-switch" data-i18n="language_label">Language</label>
+      <select id="language-switch" aria-label="Choose interface language">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+      </select>
+      <button id="voice-help-button" class="secondary-button voice-help-button" type="button" aria-label="Read this page aloud">🔊 Read aloud</button>
+      <div class="account-tools" id="account-tools" hidden>
+        <span id="account-role-pill" class="account-role-pill">Account</span>
+        <span id="account-display-name" class="account-display-name"></span>
+        <button id="logout-button" class="logout-button" type="button">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="main-nav" id="main-navigation" aria-label="Main navigation" hidden>
+    <div class="main-nav-inner">
+      <button class="nav-item is-active" type="button" data-view-target="home" data-roles="farmer,government_officer,company_officer,lab_staff,admin" aria-current="page"><span>🏡</span><b data-i18n="nav_home">Home</b></button>
+      <button class="nav-item" type="button" data-view-target="field-team" data-roles="government_officer,company_officer,admin"><span>🚜</span><b data-i18n="nav_field_team">Field team</b></button>
+      <button class="nav-item" type="button" data-view-target="soil-lab" data-roles="lab_staff,admin"><span>🧪</span><b data-i18n="nav_soil_lab">Soil lab</b></button>
+      <button class="nav-item" type="button" data-view-target="farmer-card" data-roles="farmer,government_officer,company_officer,lab_staff,admin"><span>🌱</span><b data-i18n="nav_farmer_card">Farmer card</b></button>
+      <button class="nav-item" type="button" data-view-target="location" data-roles="farmer,government_officer,company_officer,admin"><span>📍</span><b data-i18n="nav_location">My area</b></button>
+      <button class="nav-item" type="button" data-view-target="farm" data-roles="farmer,government_officer,company_officer,admin"><span>🗺️</span><b data-i18n="nav_farm">My farm</b></button>
+      <button class="nav-item" type="button" data-view-target="outlook" data-roles="farmer,government_officer,company_officer,admin"><span>🌦️</span><b data-i18n="nav_outlook">Farm predictions</b></button>
+      <button class="nav-item" type="button" data-view-target="insights" data-roles="farmer,government_officer,company_officer,admin"><span>📊</span><b data-i18n="nav_insights">Research data</b></button>
+    </div>
+  </nav>
+
+  <section class="auth-shell" id="auth-screen" aria-labelledby="auth-title">
+    <div class="auth-backdrop">
+      <div class="auth-intro">
+        <div class="auth-brand-badge">🌾 <span>SMART FARMING</span></div>
+        <p class="eyebrow">DIGITAL TWIN · ASSISTED AGRICULTURE</p>
+        <h1 id="auth-title">Farm support should reach the farmer — not make technology another burden.</h1>
+        <p>Farmers can check their own records. Agriculture officers, field partners and soil laboratories can sign in to provide services during village visits.</p>
+        <div class="auth-promise-list"><span>✓ Farmer-first and consent-led</span><span>✓ Field visits and sample tracking</span><span>✓ Verified soil results, clearly labelled</span><span>✓ Regional intelligence and Digital Twin tools remain available</span></div>
+        <div class="auth-illustration" aria-hidden="true"><span class="auth-sun"></span><span class="auth-field-lines"></span><span class="auth-farmer">🧑🏽‍🌾</span><span class="auth-lab">🧪</span></div>
+      </div>
+      <div class="auth-card">
+        <div class="auth-card-heading"><p class="eyebrow">WELCOME</p><h2 id="auth-form-title">Choose how you use the service</h2><p id="auth-form-subtitle">Select your account type to continue.</p></div>
+        <div class="auth-role-grid" id="auth-role-grid">
+          <button type="button" class="auth-role-option is-selected" data-auth-role="farmer" aria-pressed="true"><span>🌱</span><strong>Farmer</strong><small>My farm and soil report</small></button>
+          <button type="button" class="auth-role-option" data-auth-role="government_officer" aria-pressed="false"><span>🏛️</span><strong>Government / KVK</strong><small>Agriculture or extension field team</small></button>
+          <button type="button" class="auth-role-option" data-auth-role="company_officer" aria-pressed="false"><span>🚜</span><strong>Agri company / FPO</strong><small>Fertiliser or agri-input field team</small></button>
+          <button type="button" class="auth-role-option" data-auth-role="lab_staff" aria-pressed="false"><span>🧪</span><strong>Soil laboratory</strong><small>Test results and verification</small></button>
+        </div>
+        <div class="auth-mode-switch"><button id="auth-show-login" type="button" class="is-active">Sign in</button><button id="auth-show-register" type="button">New farmer? Create account</button><button id="auth-show-activate" type="button">I have a field-team code</button></div>
+        <form id="auth-login-form" class="auth-form">
+          <label for="auth-username">Mobile number / user ID</label>
+          <input id="auth-username" name="username" autocomplete="username" required placeholder="Enter your registered mobile or user ID">
+          <label for="auth-password">Password</label>
+          <input id="auth-password" name="password" type="password" autocomplete="current-password" required placeholder="Enter your password">
+          <button class="auth-submit" type="submit">Sign in securely <span>→</span></button>
+          <p class="auth-help" id="auth-login-help">Farmers sign in with their registered mobile number. Organisation accounts are issued by an authorised administrator.</p>
+          <div id="auth-login-status" class="auth-status" role="status" aria-live="polite"></div>
+        </form>
+        <form id="auth-register-form" class="auth-form" hidden>
+          <div class="auth-register-grid">
+            <div><label for="auth-register-name">Your name *</label><input id="auth-register-name" required maxlength="160" autocomplete="name"></div>
+            <div><label for="auth-register-mobile">Mobile number * (your sign-in ID)</label><input id="auth-register-mobile" required inputmode="numeric" maxlength="10" autocomplete="tel" placeholder="10-digit mobile number"></div>
+            <div><label for="auth-register-language">Preferred language</label><select id="auth-register-language"><option>Hindi</option><option>Marathi</option><option>Punjabi</option><option>Gujarati</option><option>Bengali</option><option>Tamil</option><option>Telugu</option><option>Kannada</option><option>Odia</option><option>English</option></select></div>
+            <div><label for="auth-register-state">State *</label><input id="auth-register-state" required maxlength="120" placeholder="e.g. Maharashtra"></div>
+            <div><label for="auth-register-district">District *</label><input id="auth-register-district" required maxlength="120" placeholder="e.g. Pune"></div>
+            <div><label for="auth-register-village">Village *</label><input id="auth-register-village" required maxlength="120"></div>
+            <div class="auth-register-span"><label for="auth-register-password">Create password * (8+ characters)</label><input id="auth-register-password" type="password" required minlength="8" autocomplete="new-password"></div>
+          </div>
+          <label class="auth-consent"><input id="auth-register-consent" type="checkbox" required><span>I agree to create a farm-service account using these details. No Aadhaar number is requested.</span></label>
+          <button class="auth-submit" type="submit">Create farmer account <span>→</span></button>
+          <div id="auth-register-status" class="auth-status" role="status" aria-live="polite"></div>
+        </form>
+        <form id="auth-activate-form" class="auth-form" hidden>
+          <p class="auth-help">A field worker can give you a one-time activation code when they register your farm. Use it here to create your own password.</p>
+          <label for="auth-activate-mobile">Registered mobile number *</label><input id="auth-activate-mobile" inputmode="numeric" maxlength="10" required placeholder="10-digit mobile number">
+          <label for="auth-activate-farmer-code">Farmer code *</label><input id="auth-activate-farmer-code" required maxlength="32" placeholder="Shown on your field-team slip">
+          <label for="auth-activate-code">One-time activation code *</label><input id="auth-activate-code" required maxlength="12" autocomplete="one-time-code" placeholder="Code provided by your field worker">
+          <label for="auth-activate-password">Create your password * (8+ characters)</label><input id="auth-activate-password" type="password" required minlength="8" autocomplete="new-password">
+          <button class="auth-submit" type="submit">Activate farmer account <span>→</span></button>
+          <div id="auth-activate-status" class="auth-status" role="status" aria-live="polite"></div>
+        </form>
+        <details class="auth-demo-details"><summary>Presentation demo accounts</summary><p>These accounts are for local demonstrations only. Change or remove them before any shared/public deployment.</p><div class="auth-demo-list">
+          <button type="button" data-demo-role="farmer" data-demo-user="farmer.demo" data-demo-password="Farmer@123">Farmer · farmer.demo</button>
+          <button type="button" data-demo-role="government_officer" data-demo-user="govt.demo" data-demo-password="Govt@123">Government · govt.demo</button>
+          <button type="button" data-demo-role="company_officer" data-demo-user="company.demo" data-demo-password="Company@123">Company / FPO · company.demo</button>
+          <button type="button" data-demo-role="lab_staff" data-demo-user="lab.demo" data-demo-password="Lab@123">Soil lab · lab.demo</button>
+          <button type="button" data-demo-role="admin" data-demo-user="admin.demo" data-demo-password="Admin@123">Platform admin · admin.demo</button>
+        </div></details>
+        <div class="auth-institution-note"><strong>Are you from a government department or company?</strong><span>Organisation accounts are created only after your identity and organisation access are checked. Contact the platform administrator to receive an account.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <main class="page-shell" id="app-shell" hidden>
+    <div id="alert" class="alert hidden" role="alert" aria-live="polite"></div>
+
+    <section class="app-view is-active" id="home-view" data-app-view="home" aria-labelledby="home-title">
+      <section class="farmer-home-panel" data-roles="farmer" hidden>
+        <p class="eyebrow">NAMASTE · YOUR FARM SERVICE</p>
+        <h1>Welcome, <span id="farmer-home-name">Farmer</span>.</h1>
+        <p>Your agriculture worker and soil laboratory can update this space for you. You can check the latest status here, but you do not need to enter technical details yourself.</p>
+        <div class="farmer-home-actions"><button class="primary-button" type="button" data-open-view="farmer-card">🌱 View my farmer card</button><button class="secondary-button" type="button" data-open-view="location">📍 My area & local weather</button><button class="secondary-button" type="button" data-open-view="farm">🗺️ View my farm map</button><button class="secondary-button" type="button" data-open-view="outlook">🌦️ View farm predictions</button></div>
+        <div class="farmer-home-note"><strong>Need assistance?</strong><span>Contact your village agriculture worker, district agriculture office, KVK or the field team that registered your farm.</span></div>
+      </section>
+      <div class="service-hero" data-roles="government_officer,company_officer,lab_staff,admin">
+        <div class="service-hero-copy">
+          <p class="eyebrow">ASSISTED VILLAGE AGRICULTURE SERVICE</p>
+          <h1 id="home-title">Good farming support starts with a village visit.</h1>
+          <p>Field workers record farm details, soil laboratories enter verified test results, and farmers receive a simple explanation. <strong>The farmer does not need to operate this system.</strong></p>
+          <div class="service-hero-actions">
+            <button class="primary-button" type="button" data-open-view="field-team">＋ Register farmer / field visit</button>
+            <button class="secondary-button" type="button" data-roles="lab_staff,admin" data-open-view="soil-lab">Enter soil test results</button>
+          </div>
+          <div class="service-trust"><span>✓ Farmer consent first</span><span>✓ Lab results are traceable</span><span>✓ Print or explain in person</span></div>
+        </div>
+        <div class="service-hero-art" aria-hidden="true"><div class="service-sun"></div><div class="service-ridge ridge-one"></div><div class="service-ridge ridge-two"></div><div class="service-officer">🧑🏽‍🌾</div><div class="service-lab-flask">🧪</div></div>
+      </div>
+
+      <div class="service-section-head" data-roles="government_officer,company_officer,lab_staff,admin"><div><p class="eyebrow">VILLAGE SERVICE OVERVIEW</p><h2>Today's work at a glance</h2><p>These numbers are taken from the local service records.</p></div><button id="service-dashboard-refresh" class="soft-button" type="button">↻ Refresh</button></div>
+      <div class="service-stat-grid" data-roles="government_officer,company_officer,lab_staff,admin">
+        <article class="service-stat-card"><span class="service-stat-icon">👨‍🌾</span><div><strong id="service-farmer-count">—</strong><span>Farmers registered</span></div></article>
+        <article class="service-stat-card"><span class="service-stat-icon">🧪</span><div><strong id="service-pending-count">—</strong><span>Samples awaiting lab</span></div></article>
+        <article class="service-stat-card"><span class="service-stat-icon">✅</span><div><strong id="service-verified-count">—</strong><span>Verified soil reports</span></div></article>
+        <article class="service-stat-card"><span class="service-stat-icon">📅</span><div><strong id="service-visits-count">—</strong><span>Upcoming field visits</span></div></article>
+      </div>
+
+      <div class="service-section-head" data-roles="government_officer,company_officer,lab_staff,admin"><div><p class="eyebrow">THREE SIMPLE WORKSPACES</p><h2>Choose what you need to do</h2><p>Use the workspace that matches your role.</p></div></div>
+      <div class="service-role-grid" data-roles="government_officer,company_officer,lab_staff,admin">
+        <article class="service-role-card role-field" data-roles="government_officer,company_officer,admin"><div class="service-role-symbol">🚜</div><div class="service-role-tag">FIELD TEAM / VILLAGE FACILITATOR</div><h3>Visit a farmer</h3><p>Register a farmer with consent, record the village and crop, schedule a visit and create a soil-sample code.</p><button class="service-role-link" data-open-view="field-team" type="button">Open field team <span>→</span></button></article>
+        <article class="service-role-card role-lab" data-roles="lab_staff,admin"><div class="service-role-symbol">🧪</div><div class="service-role-tag">SOIL LAB / TESTING CENTRE</div><h3>Enter test results</h3><p>Find a sample by its code, record measured values and attach the signed laboratory report.</p><button class="service-role-link" data-open-view="soil-lab" type="button">Open soil lab <span>→</span></button></article>
+        <article class="service-role-card role-farmer" data-roles="farmer,government_officer,company_officer,lab_staff,admin"><div class="service-role-symbol">🌱</div><div class="service-role-tag">FARMER / FAMILY / EXTENSION WORKER</div><h3>Explain the farmer card</h3><p>Show the farmer's location, sample status and verified test values in a clear, printable format.</p><button class="service-role-link" data-open-view="farmer-card" type="button">Open farmer card <span>→</span></button></article>
+      </div>
+
+      <section class="service-flow-panel" data-roles="government_officer,company_officer,lab_staff,admin">
+        <div><p class="eyebrow">HOW THE SERVICE WORKS</p><h2>From field visit to farmer understanding</h2><p>Technology supports the people who already work with farmers.</p></div>
+        <div class="service-flow-steps"><div><b>1</b><strong>Field visit</strong><span>Officer records farm and sample details.</span></div><i>→</i><div><b>2</b><strong>Laboratory test</strong><span>Lab enters and verifies actual readings.</span></div><i>→</i><div><b>3</b><strong>Farmer explanation</strong><span>Print, read aloud or explain in person.</span></div></div>
+      </section>
+
+      <section class="service-partner-panel" data-roles="government_officer,company_officer,lab_staff,admin">
+        <div class="partner-icon">🤝</div><div><p class="eyebrow">DESIGNED FOR INSTITUTIONAL COLLABORATION</p><h3>Government agriculture · KVK · FPO · Fertiliser & agri-input field teams · Soil laboratories</h3><p>These are proposed collaboration pathways. This prototype currently supports staff-entered records and manual report handoff; no government, laboratory or company system is connected yet. Official APIs and partner access require written approval and credentials.</p></div>
+      </section>
+
+      <section class="service-more-tools" data-roles="government_officer,company_officer,lab_staff,admin"><div><p class="eyebrow">DIGITAL TWIN & FIELD INTELLIGENCE</p><h2>Open the full farm intelligence workspace</h2><p>Regional climate, virtual farm maps, location-specific forecasts and district crop data remain part of the same system.</p></div><div class="service-tool-links"><button type="button" data-open-view="location">📍 Regional weather, soil & district crop data</button><button type="button" data-open-view="farm">🗺️ Virtual farm map & field details</button><button type="button" data-open-view="outlook">🌦️ Predictions for a saved farm location</button><button type="button" data-open-view="insights">📊 Experimental sensor predictions & research</button></div></section>
+      <div class="service-prototype-note" data-roles="government_officer,company_officer,lab_staff,admin"><strong>Integration status:</strong> Local role-based accounts, farmer consent records, organisation-scoped company workspaces and laboratory routing are available. Live government, KVK and fertiliser-company API connections still require formal partner approval and credentials. Use consented pilot records only. Do not enter Aadhaar numbers or unnecessary personal identity information.</div>
+    </section>
+
+    <section class="app-view" id="field-team-view" data-roles="government_officer,company_officer,admin" data-app-view="field-team" aria-labelledby="field-team-title">
+      <div class="view-heading"><div><p class="eyebrow">FIELD TEAM WORKSPACE</p><h1 id="field-team-title">Register a farmer and plan a visit</h1><p>Ask the questions with the farmer. You enter the details on their behalf. Keep it short and explain why each item is collected.</p></div><span class="view-illustration">🚜</span></div>
+      <div class="service-helper-banner"><span>💬</span><p><strong>Start with the farmer, not the form.</strong> Explain the service, ask permission, and record consent before saving contact or farm details. A phone number is optional.</p></div>
+      <section class="service-panel">
+        <div class="service-panel-heading"><div><span class="service-step">STEP 1</span><h2>Basic farmer and farm details</h2><p>Only collect information needed for the farm service.</p></div><span class="service-panel-mark">👨‍🌾</span></div>
+        <form id="service-farmer-form" class="service-form">
+          <div class="service-form-grid">
+            <div><label for="sf-name">Farmer's name *</label><input id="sf-name" required maxlength="160" placeholder="Name as the farmer wishes to be recorded"></div>
+            <div><label for="sf-mobile">Phone number (optional)</label><input id="sf-mobile" inputmode="tel" maxlength="20" placeholder="For SMS / call only with permission"></div>
+            <div><label for="sf-language">Preferred language *</label><select id="sf-language"><option>Hindi</option><option>Marathi</option><option>Punjabi</option><option>Gujarati</option><option>Bengali</option><option>Tamil</option><option>Telugu</option><option>Kannada</option><option>Odia</option><option>English</option><option>Other</option></select></div>
+            <div><label for="sf-village">Village *</label><input id="sf-village" required maxlength="120" placeholder="Village name"></div>
+            <div><label for="sf-district">District *</label><input id="sf-district" required maxlength="120" placeholder="District"></div>
+            <div><label for="sf-state">State *</label><select id="sf-state" required><option value="">Select state</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Gujarat</option><option>Rajasthan</option><option>Uttar Pradesh</option><option>Punjab</option><option>Haryana</option><option>Bihar</option><option>West Bengal</option><option>Odisha</option><option>Andhra Pradesh</option><option>Telangana</option><option>Karnataka</option><option>Tamil Nadu</option><option>Kerala</option><option>Assam</option><option>Chhattisgarh</option><option>Jharkhand</option><option>Himachal Pradesh</option><option>Uttarakhand</option><option>Other</option></select></div>
+            <div><label for="sf-farm">Farm name (optional)</label><input id="sf-farm" maxlength="160" placeholder="e.g. Main farm"></div>
+            <div><label for="sf-area">Farm area in square feet (optional)</label><input id="sf-area" type="number" min="10" step="1" placeholder="e.g. 21,780"><small class="field-help">For reference: 1 acre = 43,560 sq ft.</small></div>
+            <div><label for="sf-crop">Main crop (optional)</label><input id="sf-crop" maxlength="120" placeholder="e.g. Soybean, wheat, cotton"></div>
+            <div><label for="sf-vfarm">Link an existing mapped farm (optional)</label><select id="sf-vfarm"><option value="">Not mapped yet</option></select></div>
+            <div><label for="sf-officer">Field worker's name *</label><input id="sf-officer" maxlength="120" required placeholder="Your name / staff ID"></div>
+            <div><label for="sf-visit-date">Visit date and time *</label><input id="sf-visit-date" type="datetime-local" required></div>
+            <div><label for="sf-purpose">Purpose of visit</label><select id="sf-purpose"><option>Farm registration and soil sampling</option><option>Soil report follow-up</option><option>Crop observation</option><option>Farmer guidance visit</option><option>Other</option></select></div>
+          </div>
+          <details class="service-optional-details"><summary>Optional: capture the farm location</summary>
+            <p class="chart-note">Use this only when you are at the actual farm and the farmer agrees. A village centre location is not the same as a farm boundary.</p>
+            <div class="service-form-grid"><div><label for="sf-lat">Farm latitude</label><input id="sf-lat" type="number" min="6" max="37.5" step="0.000001"></div><div><label for="sf-lon">Farm longitude</label><input id="sf-lon" type="number" min="68" max="98.5" step="0.000001"></div></div>
+            <button id="service-use-farm-location" class="soft-button" type="button">📍 Capture farm location (with permission)</button>
+          </details>
+          <label for="sf-notes">Visit notes (optional)</label><textarea id="sf-notes" rows="2" maxlength="1000" placeholder="Only relevant farm-service notes"></textarea>
+          <label class="service-consent"><input id="sf-consent" type="checkbox" required><span><strong>Consent confirmed *</strong><small>I explained the purpose and the farmer agreed to the collection and use of these farm-service details. No Aadhaar or unnecessary personal ID is collected.</small></span></label>
+          <button class="primary-button service-submit" type="submit">Save farmer and visit →</button>
+          <div id="sf-status" class="service-status" role="status" aria-live="polite"></div><div id="sf-activation-card" class="sample-created-card" hidden></div>
+        </form>
+      </section>
+
+      <section class="service-panel service-sample-panel">
+        <div class="service-panel-heading"><div><span class="service-step">STEP 2</span><h2>Register a soil sample</h2><p>Create a unique sample code and write it on the sample bag.</p></div><span class="service-panel-mark">🧪</span></div>
+        <form id="service-sample-form" class="service-form">
+          <div class="service-form-grid">
+            <div><label for="ss-farmer">Farmer *</label><select id="ss-farmer" required><option value="">Register or select a farmer</option></select></div>
+            <div><label for="ss-collector">Collected by *</label><input id="ss-collector" required maxlength="120" placeholder="Field worker name"></div>
+            <div><label for="ss-collected-at">Collection date and time *</label><input id="ss-collected-at" type="datetime-local" required></div>
+            <div class="service-form-span"><label for="ss-description">Field / sample location description</label><input id="ss-description" maxlength="255" placeholder="e.g. North field, 10–15 cm depth"></div>
+            <div class="service-form-span"><label for="ss-lab-destination">Destination soil laboratory *</label><input id="ss-lab-destination" maxlength="180" required placeholder="Enter the exact lab / testing-centre name"></div>
+          </div>
+          <details class="service-optional-details"><summary>Optional: record sample GPS location</summary><div class="service-form-grid"><div><label for="ss-lat">Latitude</label><input id="ss-lat" type="number" step="0.000001" min="6" max="37.5"></div><div><label for="ss-lon">Longitude</label><input id="ss-lon" type="number" step="0.000001" min="68" max="98.5"></div></div><button id="service-use-location" type="button" class="soft-button">📍 Capture device location (with permission)</button></details>
+          <button class="primary-button service-submit" type="submit">Create sample ID →</button>
+          <div id="ss-status" class="service-status" role="status" aria-live="polite"></div>
+          <div id="ss-created-card" class="sample-created-card hidden"></div>
+        </form>
+      </section>
+      <section class="service-panel"><div class="service-panel-heading"><div><h2>Recently registered farmers</h2><p>Use this list to confirm the registration.</p></div><button id="service-farmers-refresh" class="soft-button" type="button">↻ Refresh list</button></div><div id="service-farmers-list" class="service-record-list"><p class="muted">Loading farmer records…</p></div></section>
+    </section>
+
+    <section class="app-view" id="soil-lab-view" data-roles="lab_staff,admin" data-app-view="soil-lab" aria-labelledby="soil-lab-title">
+      <div class="view-heading"><div><p class="eyebrow">SOIL LAB WORKSPACE</p><h1 id="soil-lab-title">Receive a sample and record test results</h1><p>Enter only values measured by your laboratory. Mark a result verified only after your laboratory's checking and sign-off process.</p></div><span class="view-illustration">🧪</span></div>
+      <div class="service-helper-banner lab-helper"><span>🔬</span><p><strong>Trace every result back to its sample.</strong> Match the code written on the sample bag. Keep the signed lab report attached where available.</p></div>
+      <section class="service-panel"><div class="service-panel-heading"><div><h2>Sample queue</h2><p>New and completed samples received from the field team.</p></div><button id="service-samples-refresh" class="soft-button" type="button">↻ Refresh queue</button></div><div id="service-sample-queue" class="service-queue"><p class="muted">Loading sample queue…</p></div></section>
+      <section class="service-panel"><div class="service-panel-heading"><div><span class="service-step">LAB ENTRY</span><h2>Enter measured soil values</h2><p>Blank values remain blank. Never estimate missing laboratory values.</p></div><span class="service-panel-mark">📋</span></div>
+        <form id="service-lab-form" class="service-form">
+          <div class="service-form-grid">
+            <div><label for="sl-sample-code">Scan QR / enter sample code (optional)</label><input id="sl-sample-code" autocomplete="off" autocapitalize="characters" placeholder="e.g. SOIL-261118-AB12CD"></div>
+            <div><label for="sl-sample">Sample record *</label><select id="sl-sample" required><option value="">Choose a sample from the queue</option></select></div>
+            <div><label for="sl-lab">Laboratory name *</label><input id="sl-lab" maxlength="180" required placeholder="Authorised lab / centre"></div>
+            <div><label for="sl-technician">Tested by *</label><input id="sl-technician" maxlength="120" required placeholder="Technician name"></div>
+            <div><label for="sl-date">Test date *</label><input id="sl-date" type="date" required></div>
+          </div>
+          <h3 class="service-form-subtitle">Measured values from the report</h3>
+          <div class="service-lab-values">
+            <div><label for="sl-ph">pH (0–14)</label><input id="sl-ph" type="number" step="0.01" min="0" max="14" placeholder="e.g. 7.1"></div>
+            <div><label for="sl-ec">EC (dS/m)</label><input id="sl-ec" type="number" step="0.001" min="0" placeholder="e.g. 0.4"></div>
+            <div><label for="sl-oc">Organic carbon (%)</label><input id="sl-oc" type="number" step="0.001" min="0" placeholder="e.g. 0.55"></div>
+            <div><label for="sl-n">Available N (kg/ha)</label><input id="sl-n" type="number" step="0.1" min="0" placeholder="From lab report"></div>
+            <div><label for="sl-p">Available P (kg/ha)</label><input id="sl-p" type="number" step="0.1" min="0" placeholder="From lab report"></div>
+            <div><label for="sl-k">Available K (kg/ha)</label><input id="sl-k" type="number" step="0.1" min="0" placeholder="From lab report"></div>
+          </div>
+          <div><label for="sl-report">Attach signed laboratory report (optional PDF or photo)</label><input id="sl-report" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/*"></div>
+          <label for="sl-notes">Lab notes (optional)</label><textarea id="sl-notes" rows="2" maxlength="1500" placeholder="Method, units, remarks or report reference"></textarea>
+          <label class="service-consent service-verify"><input id="sl-verified" type="checkbox"><span><strong>I confirm these results have been checked by the laboratory</strong><small>Only checked results are shown as verified on the farmer card. Keep the original signed report as the authoritative record.</small></span></label>
+          <button class="primary-button service-submit" type="submit">Save laboratory results →</button>
+          <div id="sl-status" class="service-status" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+    </section>
+
+    <section class="app-view" id="farmer-card-view" data-roles="farmer,government_officer,company_officer,lab_staff,admin" data-app-view="farmer-card" aria-labelledby="farmer-card-title">
+      <div class="view-heading"><div><p class="eyebrow">SIMPLE FARMER SUMMARY</p><h1 id="farmer-card-title">Explain the farmer's soil and farm record</h1><p>Choose a farmer to see a plain-language summary. Print this page or read it aloud during a village visit.</p></div><span class="view-illustration">🌱</span></div>
+      <section class="service-panel farmer-card-controls"><div class="farmer-card-select"><label for="service-farmer-select">Choose farmer</label><select id="service-farmer-select"><option value="">Select a farmer</option></select></div><button id="farmer-card-read" class="secondary-button" type="button" disabled>🔊 Read farmer card</button><button id="farmer-card-print" class="secondary-button" type="button" disabled>🖨 Print farmer card</button><button id="farmer-card-refresh" class="soft-button" type="button">↻ Refresh</button></section>
+      <div id="farmer-card-content" class="farmer-card-content"><div class="farmer-card-empty"><span>🌾</span><h2>Select a farmer to view their card</h2><p>Farmer details and verified soil-test values will appear here. Unverified or missing values will be clearly identified.</p></div></div>
+    </section>
+
+    <section class="app-view" id="outlook-view" data-roles="farmer,government_officer,company_officer,admin" data-app-view="outlook" aria-labelledby="outlook-view-title">
+      <div class="view-heading"><div><p class="eyebrow">LOCATION-BASED FARM OUTLOOK</p><h1 id="outlook-view-title">Farm predictions & next steps</h1><p>Choose a saved farm to see its 7-day weather forecast, local soil and crop-history context, regional soil-moisture model when data is suitable, and checks for your field team.</p></div><span class="view-illustration">🌦️</span></div>
+      <section class="panel farm-outlook-picker">
+        <div class="farm-outlook-picker-copy"><strong>Which farm should we check?</strong><span>Use a farm saved in My Farm. If no farm appears, first find your area and create a virtual farm.</span></div>
+        <label for="farm-outlook-select">Saved virtual farm</label>
+        <select id="farm-outlook-select"><option value="">Loading your farms…</option></select>
+        <label for="farm-outlook-season">Crop season to compare</label>
+        <select id="farm-outlook-season"><option value="Kharif">Kharif (monsoon)</option><option value="Rabi">Rabi (winter)</option><option value="Zaid">Zaid (summer)</option><option value="Perennial">Perennial / whole year</option></select>
+        <button id="farm-outlook-run" class="primary-button" type="button">Refresh farm outlook →</button>
+        <div class="farm-outlook-shortcuts"><button class="secondary-button" type="button" data-open-view="location">📍 Find my area</button><button class="secondary-button" type="button" data-open-view="farm">🗺️ Open my farm map</button></div>
+        <p id="farm-outlook-status" class="chart-note" role="status">Predictions are generated for the selected farm's stored coordinates.</p>
+      </section>
+      <div id="farm-outlook-result" class="farm-outlook-result hidden">
+        <div class="farm-outlook-titlebar"><div><p class="eyebrow">SELECTED FARM</p><h2 id="farm-outlook-name">—</h2><p id="farm-outlook-location" class="chart-note">—</p></div><span id="farm-outlook-provenance" class="data-source-tag">Regional data</span></div>
+        <div class="farm-outlook-metrics" id="farm-outlook-metrics"></div>
+        <section class="panel farm-outlook-panel">
+          <div class="panel-heading"><div><p class="eyebrow">LOCATION-SPECIFIC MODEL OUTPUT</p><h2>Regional root-zone moisture prediction</h2><p class="chart-note">Seven-day grid-point forecast from NASA POWER history plus forecast weather, when the data coverage and freshness checks pass.</p></div><span class="model-mark">ML</span></div>
+          <div id="farm-outlook-model-summary" class="farm-outlook-model-summary"><p class="muted">The model runs when a farm is selected. It will show a forecast or explain why the available data is not sufficient.</p></div>
+          <div id="farm-outlook-moisture-chart" class="region-chart"></div>
+          <p id="farm-outlook-model-note" class="chart-note">This is a regional grid estimate, not a field sensor measurement or plot-level prediction.</p>
+        </section>
+        <section class="panel farm-outlook-panel">
+          <div class="panel-heading"><div><p class="eyebrow">WEATHER FORECAST</p><h2>Next seven days</h2></div><span class="data-source-tag">Open-Meteo</span></div>
+          <p class="chart-note">This is the seven-day forecast for the saved farm coordinates. It is a weather forecast, not an observed farm sensor reading.</p>
+          <div id="farm-outlook-weather-chart" class="region-chart"></div>
+          <div class="table-wrap"><table class="region-table"><thead><tr><th>Date</th><th>Min °C</th><th>Max °C</th><th>Rain mm</th><th>Rain chance</th><th>ET₀ mm</th></tr></thead><tbody id="farm-outlook-weather-rows"></tbody></table></div>
+        </section>
+        <section class="panel farm-outlook-panel">
+          <div class="panel-heading"><div><p class="eyebrow">INDIA HISTORICAL CROP-PATTERN MODEL</p><h2>Which crops were historically common in similar district conditions?</h2></div><span class="data-source-tag">India district dataset</span></div>
+          <div id="farm-outlook-crop-model"><p class="muted">Choose a season and generate the farm outlook. The model compares the farm-area climate and mapped soil context with historical district crop patterns.</p></div>
+          <p class="chart-note">This is a district-level historical pattern similarity model, not a farm-specific suitability, yield, profit or planting recommendation. Use local agronomist review and a verified soil test before crop decisions.</p>
+        </section>
+        <section class="panel farm-outlook-panel">
+          <div class="panel-heading"><div><p class="eyebrow">DISTRICT CROP HISTORY</p><h2>What has been grown in this district?</h2></div><span class="data-source-tag">CSV dataset</span></div>
+          <div id="farm-outlook-crop-history"><p class="muted">No district crop dataset is loaded yet. The demo loader or an uploaded district CSV can populate this section.</p></div>
+          <div id="farm-outlook-crop-projections"></div>
+          <p class="chart-note">District crop-history trends describe recorded area and production in the district. They are not a yield forecast for this individual farm.</p>
+        </section>
+        <details class="panel farm-outlook-panel farm-data-sources">
+          <summary><strong>Where do these predictions and data come from?</strong><span>See the sources and what each one means</span></summary>
+          <div class="farm-outlook-source-links">
+            <a href="https://github.com/priyanshupriyank04/india-district-crop-dataset" target="_blank" rel="noopener">India district crop, soil & climate dataset ↗</a>
+            <a href="https://data.gov.in/catalog/district-wise-season-wise-crop-production-statistics-0" target="_blank" rel="noopener">Government of India crop statistics ↗</a>
+            <a href="https://power.larc.nasa.gov/docs/services/api/temporal/daily/" target="_blank" rel="noopener">NASA POWER daily climate ↗</a>
+            <a href="https://open-meteo.com/en/docs" target="_blank" rel="noopener">Open-Meteo weather forecast ↗</a>
+            <a href="https://docs.isric.org/globaldata/soilgrids/wcs.html" target="_blank" rel="noopener">ISRIC SoilGrids WCS ↗</a>
+            <a href="https://imdpune.gov.in/cmpg/Griddata/Rainfall_25_NetCDF.html" target="_blank" rel="noopener">IMD gridded rainfall (reference) ↗</a>
+          </div>
+          <p class="chart-note">The India crop dataset is a district-level historical pattern model, not a farm-specific crop recommendation. NASA POWER and SoilGrids are gridded estimates; Open-Meteo is a forecast. A verified laboratory report and local agronomist review are required for field decisions. District crop area in government tables remains in the source-published unit (hectares); individual farm and plot sizes are shown in square feet.</p>
+          <p class="chart-note"><a href="/static/DATASET_SOURCES_AND_PREDICTIONS.md" target="_blank" rel="noopener">Open complete dataset sources, licences and model limitations ↗</a></p>
+        </details>
+        <section class="panel farm-outlook-panel">
+          <div class="panel-heading"><div><p class="eyebrow">LOCAL FARMING CHECKS</p><h2>Issues to review with the field officer</h2></div><span class="data-source-tag">Regional screening</span></div>
+          <div id="farm-outlook-problems" class="region-problem-grid"></div>
+          <div id="farm-outlook-actions" class="region-actions"></div>
+        </section>
+        <section class="panel farm-outlook-panel">
+          <div class="panel-heading"><div><p class="eyebrow">FIELD TEST RECORD</p><h2>Latest verified soil-test sample</h2></div><span class="data-source-tag">Laboratory record</span></div>
+          <div id="farm-outlook-lab-record"><p class="muted">No linked verified lab result is available.</p></div>
+        </section>
+        <details class="farmer-more-details"><summary>Data sources, model validation and limitations</summary><div id="farm-outlook-sources" class="farmer-more-details-content region-sources"></div><p class="chart-note">Regional climate and soil layers are gridded estimates. Crop-history projections are district-level trend baselines. Actual field soil measurements must come from a representative laboratory or Soil Health Card. The separate Kolkata sensor model is not used to predict an Indian virtual farm.</p></details>
+      </div>
+    </section>
+
+    <section class="app-view" id="location-view" data-app-view="location" aria-labelledby="location-view-title">
+      <div class="view-heading"><div><p class="eyebrow" data-i18n="area_eyebrow">STEP 1 · YOUR LOCAL AREA</p><h1 id="location-view-title" data-i18n="area_title">Find local farming information</h1><p data-i18n="area_desc">Search by village, town or district. You do not need to enter GPS coordinates.</p></div><span class="view-illustration">📍</span></div>
+          <section class="panel region-panel">
+      <div class="panel-heading">
+        <div><p class="eyebrow">LOCAL FARMING INFORMATION</p><h2>Find local farming information</h2>
+          <p class="region-intro">Enter your village, town or district. We will collect regional weather, soil and farming information, then show common issues and useful things to check.</p>
+        </div>
+        <span class="model-mark">GEO</span>
+      </div>
+      <form id="region-search-form" class="region-search-form">
+        <div class="region-search-input"><label for="region-query">Your village, town or district</label><input id="region-query" type="text" placeholder="e.g. Sehore, Madhya Pradesh" data-i18n-placeholder="region_placeholder" required></div>
+        <button id="region-search-button" class="primary-button" type="submit" data-i18n="find_area">Find my area</button>
+      </form>
+      <div id="region-location-choices" class="hidden region-location-choices">
+        <label for="region-location-select">Choose the matching location</label>
+        <select id="region-location-select"></select>
+        <button id="region-analyze-button" class="secondary-button" type="button">Show local information</button>
+      </div>
+      <div id="region-loading" class="muted hidden">Retrieving climate, forecast and soil information. Soil map access may take longer.</div>
+      <div id="region-error" class="alert hidden"></div>
+      <div id="region-results" class="hidden">
+        <div class="region-location-title"><div><p class="eyebrow">SELECTED REGION</p><h3 id="region-name">—</h3><p id="region-coordinates" class="chart-note">—</p></div><span class="pill">Regional-scale estimates</span></div>
+        <div class="region-build-farm"><div><strong>Turn this region into a virtual farm</strong><p>Use the selected Indian location, regional climate and mapped soil context as the starting point. You will define the actual farm boundary, plots, crops, seasons, water sources and infrastructure below.</p></div><button id="create-farm-from-region" class="primary-button" type="button">Create my farm from this area →</button></div>
+        <details class="farmer-more-details">
+          <summary>More details about this area · seasons, weather, soil and crop history</summary>
+          <div class="farmer-more-details-content">
+        <div class="region-section-heading"><h3>Indian agro-climatic classification</h3><span class="data-source-tag">Planning Commission · 15 regions</span></div>
+        <div id="region-agro-context" class="region-agro-context"></div>
+        <div class="region-section-heading"><h3>Indian agricultural seasons</h3><span class="data-source-tag">State/crop calendars vary</span></div>
+        <div id="region-season-calendar" class="region-season-calendar"></div>
+        <div class="region-section-heading"><h3>Climate profile · 2016–2025</h3><span class="data-source-tag">NASA POWER</span></div>
+        <div id="region-climate-metrics" class="region-metrics"></div>
+        <div class="region-chart-block"><div class="panel-heading"><h4>Average monthly climate</h4><span class="chart-note">Monthly rainfall and mean temperature</span></div><div id="region-climate-chart" class="region-chart"></div></div>
+        <div class="region-section-heading"><h3>Location-specific soil-moisture prediction</h3><span class="data-source-tag">NASA POWER + ML</span></div>
+        <div id="region-moisture-prediction" class="region-moisture-prediction"><p class="muted">Regional model forecast will appear when a compatible NASA root-zone moisture series is available.</p></div>
+        <div id="region-moisture-chart" class="region-chart"></div>
+        <div class="region-section-heading"><h3>7-day weather outlook</h3><span class="data-source-tag">Open-Meteo</span></div>
+        <div class="table-wrap"><table class="region-table"><thead><tr><th>Date</th><th>Min °C</th><th>Max °C</th><th>Rain mm</th><th>Rain chance</th><th>ET₀ mm</th></tr></thead><tbody id="region-weather-rows"></tbody></table></div>
+        <div class="region-section-heading"><h3>Mapped soil properties & fertility indicators</h3><span class="data-source-tag">ISRIC SoilGrids</span></div>
+        <div id="region-soil-summary" class="region-metrics"></div>
+        <p id="region-soil-note" class="chart-note"></p>
+        <div class="region-section-heading"><h3>Local cropping pattern</h3><span class="data-source-tag">District crop CSV · source-labelled</span></div>
+        <div id="region-crop-pattern" class="region-crops"><p class="muted">No district crop data loaded yet. Load demo data for your presentation or import a verified district dataset.</p></div>
+          </div>
+        </details>
+        <div class="region-section-heading"><h3>Common farming problems in this region</h3><span class="data-source-tag">ICAR regional evidence</span></div>
+        <div id="region-problem-context" class="region-problem-context"></div>
+        <div class="region-section-heading"><h3>Weather and soil checks to pay attention to</h3><span class="data-source-tag">Weather + mapped soil screening</span></div>
+        <div id="region-live-problems" class="region-actions"></div>
+        <div class="region-section-heading"><h3>What you can check next</h3><span class="data-source-tag">Data-based checks</span></div>
+        <div id="region-actions" class="region-actions"></div>
+        <div class="region-disclaimer"><strong>Interpretation limits:</strong> Regional weather and soil products are gridded estimates, not measurements from a specific plot. A SoilGrids texture group is only a screening estimate. Complete fertility diagnosis needs a representative Soil Health Card/laboratory report, including available N, P, K and other locally relevant nutrients. The current EcoIrrigate ML model is trained on two experimental Kolkata farms and is not applied to this selected location.</div>
+        <div id="region-sources" class="region-sources"></div>
+      </div>
+      <details class="farmer-more-details admin-details" data-roles="government_officer,company_officer,admin">
+        <summary>Advanced: import district crop statistics (optional)</summary>
+        <div class="farmer-more-details-content">
+      <div class="region-data-upload">
+        <div><strong>Load local cultivation history</strong><p>Upload the district-wise, season-wise crop production CSV from India's Open Government Data portal. This allows the dashboard to show crops historically recorded in the selected district.</p><a href="https://www.data.gov.in/catalog/district-wise-season-wise-crop-production-statistics-0" target="_blank" rel="noopener">Open official crop statistics dataset ↗</a></div>
+        <form id="crop-stats-form" class="crop-upload-form"><input type="file" id="crop-stats-file" accept=".csv,text/csv" required><button class="secondary-button" type="submit">Import crop CSV</button><span id="crop-upload-status" class="chart-note"></span></form>
+        <button id="load-demo-crop-stats" class="soft-button" type="button">Load synthetic Sehore / Pune sample dataset</button><p class="chart-note">The built-in sample is fictional presentation data, not official Government statistics. For a real pilot, upload a verified OGD district crop-production CSV.</p>
+      </div>
+        </div>
+      </details>
+    </section>
+    </section>
+
+    <section class="app-view" id="farm-view" data-app-view="farm" aria-labelledby="farm-view-title">
+      <div class="view-heading"><div><p class="eyebrow" data-i18n="farm_eyebrow">STEP 2 · YOUR FARM AND FIELDS</p><h1 id="farm-view-title" data-i18n="farm_title">Add your farm</h1><p data-i18n="farm_desc">Start with a few basic details. You can add maps, crops and optional soil information one step at a time.</p></div><span class="view-illustration">🌾</span></div>
+          <section class="panel virtual-farm-panel" id="virtual-farm-builder">
+      <div class="panel-heading"><div><p class="eyebrow">YOUR FARM</p><h2>Add your farm details</h2><p class="region-intro">Start with your farm name and location. Then add each field, choose its crop and season, and map water sources or other farm facilities when you are ready.</p></div><span class="model-mark">FARM</span></div>
+      <div class="farmer-step-strip"><div><b>1</b><span>Farm details</span></div><i></i><div><b>2</b><span>Draw farm map</span></div><i></i><div><b>3</b><span>Add fields & crops</span></div><i></i><div><b>4</b><span>Add water & facilities</span></div></div><p class="farmer-help-line">You can save your farm first and complete the map and field details in separate visits.</p>
+      <div class="vf-create-grid">
+        <form id="virtual-farm-create-form" class="vf-form">
+          <h3>Step 1 · Tell us about your farm</h3>
+          <p class="chart-note">First find your village or district in “My area”. We will fill in the location details for you.</p>
+          <div><label for="vf-farm-name">Farm name</label><input id="vf-farm-name" required maxlength="160" placeholder="e.g. Green Valley Farm"></div>
+          <div class="vf-two"><div><label for="vf-village">Village / locality</label><input id="vf-village" placeholder="Village name"></div><div><label for="vf-area">Total farm area (square feet)</label><input id="vf-area" type="number" min="10" step="1" required placeholder="e.g. 21,780"><small class="field-help">For reference: 1 acre = 43,560 sq ft.</small></div></div>
+          <button id="vf-use-location" class="secondary-button location-fill-button" type="button">📍 Use my device location (only while at the farm)</button>
+          <p id="vf-location-status" class="chart-note">This asks permission only when you press the button. Location accuracy depends on your device; check it against your actual farm.</p>
+          <details class="vf-advanced-fields"><summary>More farm details (optional)</summary>
+            <div class="vf-advanced-fields-content">
+          <div class="vf-two"><div><label for="vf-lat">Latitude (filled from your location)</label><input id="vf-lat" type="number" min="6" max="37.5" step="0.000001" ></div><div><label for="vf-lon">Longitude (filled from your location)</label><input id="vf-lon" type="number" min="68" max="98.5" step="0.000001" ></div></div>
+          <p class="chart-note">The search result is a locality reference point. Replace these coordinates with the actual farm location before saving, then draw plots around it.</p>
+
+          <div class="vf-two"><div><label for="vf-system">Farming system</label><select id="vf-system"><option>Rainfed</option><option>Irrigated</option><option>Mixed crop-livestock</option><option>Rice-based</option><option>Cereal-based</option><option>Pulse / Oilseed-based</option><option>Horticulture</option><option>Plantation</option><option>Agroforestry</option><option>Mixed / Other</option></select></div><div><label for="vf-landform">Landform</label><select id="vf-landform"><option>Plain</option><option>Plateau</option><option>Hilly</option><option>Coastal</option><option>River valley / Floodplain</option><option>Arid / Desert</option><option>Other</option></select></div></div>
+          <div class="vf-two"><div><label for="vf-water">Main water source</label><select id="vf-water"><option>Rainfed</option><option>Canal</option><option>Groundwater</option><option>Farm pond</option><option>River / Surface water</option><option>Tank</option><option>Recycled / Other</option></select></div><div><label for="vf-irrigation">Primary irrigation method</label><select id="vf-irrigation"><option>Rainfed</option><option>Canal</option><option>Tube well / Borewell</option><option>Open well</option><option>River / Lift irrigation</option><option>Tank / Farm pond</option><option>Drip</option><option>Sprinkler</option><option>Mixed / Other</option></select></div></div>
+            </div>
+          </details>
+          <div><label for="vf-zone">Suggested farming region</label><select id="vf-zone" required><option value="">Analyze an Indian location first</option></select><p id="vf-zone-note" class="chart-note">State-level zones can overlap. Confirm the selected zone against district/coordinate mapping or local agricultural guidance.</p></div>
+          <button class="primary-button" type="submit">Save my farm</button>
+          <div id="vf-create-status" class="chart-note"></div>
+        </form>
+        <div class="vf-structure-preview"><h3>How your farm is organised</h3><div class="vf-tree"><div class="vf-tree-root">YOUR FARM <small>Village · District · State</small></div><div class="vf-tree-branches"><div><b>Plot A</b><span>Crop · Season · Soil · Irrigation</span></div><div><b>Plot B</b><span>Crop · Season · Soil · Irrigation</span></div><div><b>Plot C</b><span>Crop · Season · Soil · Irrigation</span></div></div><div class="vf-assets-line">Wells · Ponds · Tanks · Pumps · Channels · Farm buildings</div></div><p class="chart-note">This is the information model. The map below stores the actual plot boundaries you draw.</p></div>
+      </div>
+      <div class="vf-workspace">
+        <div class="panel-heading vf-workspace-heading"><div><h3>Step 2 · Draw your farm on the map</h3><p class="chart-note">Choose your farm below. First draw the outside edge of the whole farm. Then draw each field inside it.</p></div><div class="vf-farm-select"><label for="vf-select">Saved virtual farm</label><select id="vf-select"><option value="">No virtual farm created yet</option></select></div></div>
+        <div class="vf-map-legend"><span><i class="vf-dot boundary-dot"></i> Outside edge of farm</span><span><i class="vf-dot plot-dot"></i> Field borders</span><span><i class="vf-dot asset-dot"></i> Wells and facilities</span></div>
+        <p class="map-howto">How to draw: choose <b>Draw outside edge of farm</b>, tap each corner of your farm on the map, then double-click the last point to finish. After it is saved, choose <b>Draw a field</b> and repeat for each field inside the farm.</p>
+        <div class="vf-map-actions"><div class="vf-map-buttons"><button id="vf-draw-farm-boundary" class="secondary-button" type="button">Draw outside edge of farm</button><button id="vf-draw-plot" class="secondary-button" type="button">Draw a field</button></div><span id="vf-boundary-status" class="chart-note">Draw the farm perimeter first, then draw the individual plot boundaries.</span></div>
+        <div id="virtual-farm-map" class="virtual-farm-map"><div class="vf-map-placeholder">Analyze an Indian region and create a virtual farm to open its map.</div></div>
+        <div id="vf-current-summary" class="vf-current-summary muted">No virtual farm selected.</div>
+        <div id="vf-environment-summary" class="vf-environment-summary"></div>
+      </div>
+      <div class="vf-workspace vf-plot-workspace">
+        <div class="panel-heading"><div><h3>Step 3 · Add a field and its crop</h3><p class="chart-note">After drawing a field on the map, enter its name, size, crop and season. You can add extra soil details later.</p></div></div>
+        <form id="virtual-plot-form" class="vf-form hidden">
+          <div class="vf-two"><div><label for="vf-plot-name">Plot name</label><input id="vf-plot-name" required placeholder="e.g. North Field"></div><div><label for="vf-plot-area">Plot area (square feet)</label><input id="vf-plot-area" type="number" min="10" step="1" required><small class="field-help">Enter the field size in square feet.</small></div></div>
+          <div class="vf-three"><div><label for="vf-crop">Crop</label><input id="vf-crop" list="indian-crops" placeholder="e.g. Soybean"><datalist id="indian-crops"><option>Rice</option><option>Wheat</option><option>Maize</option><option>Bajra</option><option>Jowar</option><option>Ragi</option><option>Soybean</option><option>Cotton</option><option>Groundnut</option><option>Tur / Arhar</option><option>Moong</option><option>Urad</option><option>Gram / Chickpea</option><option>Mustard</option><option>Lentil</option><option>Barley</option><option>Sugarcane</option><option>Jute</option><option>Potato</option><option>Onion</option><option>Tomato</option><option>Banana</option><option>Mango</option><option>Coconut</option><option>Tea</option><option>Coffee</option><option>Other local crop</option></datalist></div><div><label for="vf-season">Indian crop season</label><select id="vf-season"><option value="">Select season</option><option>Kharif</option><option>Rabi</option><option>Zaid</option><option>Perennial</option></select><small id="vf-season-note" class="chart-note">Choose the crop season; local sowing/harvest timing varies by state and crop.</small></div><div><label for="vf-stage">Crop stage</label><select id="vf-stage"><option value="">Select stage</option><option>Land preparation</option><option>Nursery</option><option>Sowing / Planting</option><option>Germination</option><option>Vegetative growth</option><option>Flowering</option><option>Fruiting / Grain filling</option><option>Maturity</option><option>Harvested</option><option>Fallow</option></select></div></div>
+          <details class="vf-advanced-fields">
+            <summary>Optional: add variety, soil and other field information</summary>
+            <div class="vf-advanced-fields-content">
+          <div class="vf-three"><div><label for="vf-variety">Variety (optional)</label><input id="vf-variety" placeholder="Cultivar / variety"></div><div><label for="vf-sowing">Sowing / planting date</label><input id="vf-sowing" type="date"></div><div><label for="vf-soil-group">Indian soil group</label><select id="vf-soil-group"><option value="">Select / verify soil group</option><option>Alluvial</option><option>Black / Regur</option><option>Red and Yellow</option><option>Laterite</option><option>Arid / Desert</option><option>Forest and Mountain</option><option>Saline / Alkaline</option><option>Peaty and Marshy</option><option>Coastal Alluvial</option><option>Other / Not classified</option></select></div></div>
+          <div class="vf-two"><div><label for="vf-soil-texture">Field soil texture (optional)</label><input id="vf-soil-texture" placeholder="e.g. clay loam / sandy loam"></div><div><label for="vf-irrigation-plot">Plot irrigation method</label><select id="vf-irrigation-plot"><option value="">Use farm default / not recorded</option><option>Canal</option><option>Tube well / Borewell</option><option>Open well</option><option>River / Lift irrigation</option><option>Tank / Farm pond</option><option>Drip</option><option>Sprinkler</option><option>Rainfed</option><option>Mixed / Other</option></select></div></div>
+          <p id="vf-soil-regional-note" class="chart-note">Regional soil maps are screening context only. Do not copy mapped fertility estimates into field soil-test fields.</p>
+          <div class="vf-soiltest"><strong>Field soil-test values (optional, enter only from a Soil Health Card/lab report)</strong><div class="vf-three"><div><label for="vf-ph">pH</label><input id="vf-ph" type="number" min="0" max="14" step="0.01"></div><div><label for="vf-ec">EC (dS/m)</label><input id="vf-ec" type="number" min="0" step="0.001"></div><div><label for="vf-oc">Organic carbon (%)</label><input id="vf-oc" type="number" min="0" step="0.001"></div></div><div class="vf-three"><div><label for="vf-n">Available N (kg/ha)</label><input id="vf-n" type="number" min="0" step="0.1"></div><div><label for="vf-p">Available P (kg/ha)</label><input id="vf-p" type="number" min="0" step="0.1"></div><div><label for="vf-k">Available K (kg/ha)</label><input id="vf-k" type="number" min="0" step="0.1"></div></div><div class="vf-two"><div><label for="vf-soil-source">Soil-test source</label><select id="vf-soil-source"><option value="">Not measured / not entered</option><option>Government Soil Health Card</option><option>Accredited soil testing laboratory</option><option>Farmer-provided report</option></select></div><div><label for="vf-soil-date">Soil-test date</label><input id="vf-soil-date" type="date"></div></div></div>
+          <div><label for="vf-plot-notes">Plot notes</label><textarea id="vf-plot-notes" rows="2" placeholder="Land preparation, drainage, previous crop, local observations…"></textarea></div>
+            </div>
+          </details>
+          <div class="vf-two"><button class="primary-button" type="submit">Save this field</button><button class="secondary-button" id="vf-clear-polygon" type="button">Clear this drawing</button></div>
+          <div id="vf-plot-status" class="chart-note"></div>
+        </form>
+        <div id="vf-plot-instruction" class="vf-empty">Create or select a virtual farm, then draw a plot polygon on the map. Plot details will open here.</div>
+        <div id="vf-plot-list" class="vf-plot-list"></div>
+      </div>
+      <div class="vf-workspace">
+        <div class="panel-heading"><div><h3>Step 4 · Add water sources and facilities (optional)</h3><p class="chart-note">Add a well, borewell, pond, tank, pump or farm building if you want to show it on your farm map.</p></div></div>
+        <form id="virtual-asset-form" class="vf-form hidden">
+          <div class="vf-three"><div><label for="vf-asset-type">Asset type</label><select id="vf-asset-type"><option>Borewell / Tube well</option><option>Open well</option><option>Farm pond</option><option>Water tank</option><option>Canal / Field channel</option><option>Pump house</option><option>Farm building</option><option>Cattle shed</option><option>Storage / Granary</option><option>Solar pump</option><option>Drainage channel</option><option>Other</option></select></div><div><label for="vf-asset-name">Asset name</label><input id="vf-asset-name" required placeholder="e.g. Borewell 1"></div><div><label for="vf-asset-capacity">Capacity / size</label><input id="vf-asset-capacity" placeholder="e.g. 5000 L"></div></div>
+          <p id="vf-asset-location" class="chart-note">Click “Place asset”, then click a point on the map.</p><input id="vf-asset-lat" type="hidden"><input id="vf-asset-lon" type="hidden"><div class="vf-two"><button id="vf-place-asset" type="button" class="secondary-button">Place asset on map</button><button type="submit" class="primary-button">Save infrastructure asset</button></div><div id="vf-asset-status" class="chart-note"></div>
+        </form>
+      </div>
+      <div class="vf-workspace soil-report-upload-panel">
+        <div class="panel-heading"><div><h3>Upload Soil Health Card or laboratory report</h3><p class="chart-note">Save a PDF or clear photo with your farm records. You can enter the measured pH, EC and N–P–K values in the field form above.</p></div><span class="model-mark">SOIL</span></div>
+        <form id="soil-report-upload-form" class="vf-form">
+          <label for="soil-report-file">Choose report (PDF, JPG or PNG; maximum 25 MB)</label><input id="soil-report-file" name="soil_report" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/*" required>
+          <div class="vf-two"><div><label for="soil-report-source">Report source</label><select id="soil-report-source" name="report_source"><option>Government Soil Health Card</option><option>Accredited soil testing laboratory</option><option>Farmer-provided report</option></select></div><div><label for="soil-report-date">Report date</label><input id="soil-report-date" name="report_date" type="date"></div></div>
+          <label for="soil-report-notes">Notes (optional)</label><textarea id="soil-report-notes" name="notes" rows="2" placeholder="Sample ID, lab name or field reference"></textarea>
+          <button class="primary-button" type="submit">Upload and save report</button><p id="soil-report-status" class="chart-note" role="status">Select a saved farm before uploading.</p>
+        </form><div id="soil-report-list" class="chart-note"></div>
+        <p class="chart-note"><strong>Important:</strong> The prototype stores the document securely within your local project folder; it does not automatically extract or interpret report values. Enter values exactly as printed and confirm unclear units with the testing laboratory.</p>
+      </div>
+      <div class="vf-data-note"><strong>India-specific data and accuracy:</strong> The 15 agro-climatic regions are an official planning framework, but several states span multiple regions; the zone selector is a candidate until verified at district/sub-district level. Kharif, Rabi, Zaid and perennial calendars vary by state, crop, irrigation and local rainfall. SoilGrids or regional map values remain estimates. Plot soil pH, EC, organic carbon and available N–P–K must be entered from an actual field Soil Health Card/lab report. Do not treat a broad regional crop list as a recommendation for a specific plot.</div>
+    </section>
+    </section>
+
+    <section class="app-view" id="insights-view" data-app-view="insights" aria-labelledby="insights-view-title">
+      <div class="view-heading"><div><p class="eyebrow">OPTIONAL · EXPERIMENTAL DATA</p><h1 id="insights-view-title">Reports & research</h1><p>These tools use the supplied Kolkata experimental sensor dataset. They are for research demonstration and are not live measurements from your own farm.</p></div><span class="view-illustration">📊</span></div>
+      <div class="research-warning"><strong>Important:</strong> The sample predictions below are not crop-specific advice for your farm. Your own virtual farm information is stored separately. Do not use the experimental moisture threshold as a fertilizer or irrigation prescription.</div>
+          <section class="page-heading">
+      <div>
+        <p class="eyebrow">EXPERIMENTAL DATA & MODEL REPORTS</p>
+        <h1>Research dashboard</h1>
+        <p class="subheading">Explore the sample sensor dataset, compare forecast models and review saved research outputs. These sample predictions are not connected to your own farm.</p>
+      </div>
+      <div class="farm-picker">
+        <label for="farm-select">Experimental demo farm (Kolkata)</label>
+        <select id="farm-select"><option value="">Loading farms…</option></select>
+      </div>
+    </section>
+
+    <div class="research-data-note"><strong>Separate experimental reference dataset:</strong> The Kolkata EcoIrrigate selector below is for the research dataset demonstration only. Create your own Indian virtual farm in the Regional Farm Intelligence and Virtual Farm Builder sections.</div>
+    <section class="meta-strip" id="farm-meta">
+      <div><span class="meta-label">LOCATION</span><strong id="farm-location">—</strong></div>
+      <div><span class="meta-label">CROP PROFILE</span><strong id="farm-crop">Not configured</strong></div>
+      <div><span class="meta-label">LATEST OBSERVATION</span><strong id="latest-time">—</strong></div>
+      <div><span class="meta-label">DATA POINTS</span><strong id="observation-count">—</strong></div>
+    </section>
+
+    <section class="metric-grid">
+      <article class="metric-card primary-metric"><div class="metric-label">SAMPLE SOIL MOISTURE</div><div class="metric-value"><span id="metric-moisture">—</span><small>%</small></div><div class="metric-foot">Volumetric moisture reading</div></article>
+      <article class="metric-card"><div class="metric-label">AIR TEMPERATURE</div><div class="metric-value"><span id="metric-air">—</span><small>°C</small></div><div class="metric-foot">Atmospheric sensor</div></article>
+      <article class="metric-card"><div class="metric-label">SOIL TEMPERATURE</div><div class="metric-value"><span id="metric-soil">—</span><small>°C</small></div><div class="metric-foot">Soil sensor reading</div></article>
+      <article class="metric-card"><div class="metric-label">ATMOSPHERIC PRESSURE</div><div class="metric-value"><span id="metric-pressure">—</span><small>inHg</small></div><div class="metric-foot">Atmospheric sensor</div></article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel chart-panel">
+        <div class="panel-heading"><div><p class="eyebrow">RESEARCH DATASET DEMONSTRATION · KOLKATA EXPERIMENTAL FARMS</p><h2>Sensor-observation history</h2></div><span class="pill">Last 24 hours</span></div>
+        <div id="history-chart" class="chart"></div>
+        <p class="chart-note">Historical observations from the selected farm dataset. This is not a live sensor connection.</p>
+      </article>
+
+      <article class="panel forecast-panel">
+        <div class="panel-heading"><div><p class="eyebrow">ECOIRRIGATE MODEL DEMONSTRATION</p><h2>Sample farm forecast</h2></div><span class="model-mark">ML</span></div>
+        <div class="form-grid">
+          <div><label for="horizon-select">Forecast horizon</label><select id="horizon-select"><option value="1">1 hour</option><option value="6">6 hours</option></select></div>
+          <div><label for="model-select">Prediction method</label><select id="model-select"><option>Persistence</option><option>Ridge</option><option>Random Forest</option><option>Ridge + sensor context</option></select></div>
+        </div>
+        <div class="threshold-control"><label for="threshold-input">Prototype moisture threshold (%)</label><input id="threshold-input" type="number" min="0" max="100" step="0.1" value="12.0"></div>
+        <button id="forecast-button" class="primary-button">Generate sample forecast <span>→</span></button>
+        <div id="forecast-result" class="forecast-result empty-state">Select a farm and generate a forecast to view the predicted condition and advisory.</div>
+      </article>
+    </section>
+
+    <section class="content-grid lower-grid">
+      <article class="panel">
+        <div class="panel-heading"><div><p class="eyebrow">MODEL COMPARISON</p><h2>Forecast outputs</h2></div></div>
+        <div id="comparison-list" class="comparison-list"><p class="muted">Generate a forecast to compare methods.</p></div>
+        <p class="chart-note">Model options are trained from the supplied dataset. Research evaluation results are in the supplementary materials.</p>
+      </article>
+      <article class="panel">
+        <div class="panel-heading"><div><p class="eyebrow">FARM PROFILE</p><h2>Configure context</h2></div></div>
+        <form id="profile-form" class="profile-form">
+          <div><label for="crop-input">Crop (optional)</label><input id="crop-input" type="text" placeholder="e.g. rice, wheat"></div>
+          <div><label for="soil-input">Soil type (optional)</label><input id="soil-input" type="text" placeholder="e.g. loam, clay loam"></div>
+          <div><label for="area-input">Field area (square feet)</label><input id="area-input" type="number" min="10" step="1" placeholder="Optional"><small class="field-help">For reference: 1 acre = 43,560 sq ft.</small></div>
+          <button class="secondary-button" type="submit">Save farm profile</button>
+        </form>
+        <div class="notice-box"><strong>Prototype limitation</strong><p>The supplied dataset contains two experimental Kolkata farms and sensor-derived soil/environment measurements. It does not contain rainfall, crop stage, irrigation logs or a live field-sensor feed. The threshold is for demonstration and must be calibrated by an agronomist before field decisions.</p></div>
+      </article>
+    </section>
+
+    <section class="panel history-panel">
+      <div class="panel-heading"><div><p class="eyebrow">PERSISTED OUTPUTS</p><h2>Recent forecasts & advisories</h2></div><button id="refresh-history" class="text-button">Refresh</button></div>
+      <div class="table-wrap"><table><thead><tr><th>Generated</th><th>Horizon</th><th>Model</th><th>Forecast</th><th>Advisory</th><th>Message</th></tr></thead><tbody id="forecast-history"><tr><td colspan="6" class="muted">No saved forecasts yet.</td></tr></tbody></table></div>
+    </section>
+    </section>
+
+    <footer class="footer"><div><strong>Digital Twin for Smart Farming</strong><span>Software-based academic prototype · TYCORE126</span></div><span>Research dataset: EcoIrrigate · Mendeley Data v1</span></footer>
+  </main>
+  <script src="{{ url_for('static', filename='js/auth-ui.js') }}?v=india-data-sqft-2"></script>
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}?v=india-data-sqft-2"></script>
+  <script src="{{ url_for('static', filename='js/virtual-farm.js') }}?v=india-data-sqft-2"></script>
+  <script src="{{ url_for('static', filename='js/farmer-ui.js') }}?v=india-data-sqft-2"></script>
+  <script src="{{ url_for('static', filename='js/service-desk.js') }}?v=india-data-sqft-2"></script>
+  <script src="{{ url_for('static', filename='js/farm-outlook.js') }}?v=india-data-sqft-2"></script>
+</body>
+</html>

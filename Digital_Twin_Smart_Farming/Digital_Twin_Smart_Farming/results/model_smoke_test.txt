@@ -1,0 +1,21 @@
+Kolkata_Farm_1 | 1h | current=14.900%
+  Persistence              14.900%
+  Ridge                    14.983%
+  Random Forest            14.789%
+  Ridge + sensor context   14.981%
+Kolkata_Farm_1 | 6h | current=14.900%
+  Persistence              14.900%
+  Ridge                    15.293%
+  Random Forest            15.401%
+  Ridge + sensor context   15.293%
+Kolkata_Farm_2 | 1h | current=16.170%
+  Persistence              16.170%
+  Ridge                    16.233%
+  Random Forest            16.201%
+  Ridge + sensor context   16.219%
+Kolkata_Farm_2 | 6h | current=16.170%
+  Persistence              16.170%
+  Ridge                    16.508%
+  Random Forest            18.359%
+  Ridge + sensor context   16.458%
+Model smoke test completed. Database/API integration still requires a configured MySQL service.
